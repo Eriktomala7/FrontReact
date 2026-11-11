@@ -1,0 +1,500 @@
+.page {
+  min-height: 100%;
+  color: #14213a;
+  font-family: 'Avenir Next', 'Segoe UI', sans-serif;
+}
+
+.pageHeader {
+  display: flex;
+  min-height: 80px;
+  align-items: center;
+  padding: 0 20px 18px;
+}
+
+.breadcrumb {
+  margin: 0 0 5px;
+  color: #8794aa;
+  font-size: 12px;
+}
+
+.breadcrumb span {
+  padding: 0 5px;
+  color: #a7b1c1;
+}
+
+.pageHeader h1 {
+  margin: 0;
+  color: #101b31;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.directory {
+  overflow: hidden;
+  border: 1px solid #e4eaf3;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(28, 49, 83, 0.035);
+}
+
+.directoryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px 24px 18px;
+}
+
+.directoryHeader h2 {
+  margin: 0;
+  color: #17233a;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.directoryHeader p {
+  margin: 6px 0 0;
+  color: #8794aa;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.createButton {
+  display: inline-flex;
+  min-height: 38px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 7px;
+  background: #2862ee;
+  box-shadow: 0 6px 14px rgba(40, 98, 238, 0.2);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.createButton:hover {
+  transform: translateY(-1px);
+  background: #1e52d0;
+}
+
+.createButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.createButton:focus-visible,
+.editButton:focus-visible,
+.deleteButton:focus-visible,
+.modalClose:focus-visible,
+.cancelButton:focus-visible,
+.submitButton:focus-visible {
+  outline: 3px solid rgba(40, 98, 238, 0.2);
+  outline-offset: 2px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  padding: 0 22px 18px;
+}
+
+.userTable {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.userTable th {
+  height: 42px;
+  padding: 0 12px;
+  border-bottom: 1px solid #e8edf4;
+  color: #8b98ad;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.userTable th:last-child,
+.userTable td:last-child {
+  text-align: right;
+}
+
+.userTable td {
+  height: 64px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #edf0f5;
+  color: #52627c;
+  font-size: 11px;
+  vertical-align: middle;
+}
+
+.userTable tbody tr {
+  transition: background-color 140ms ease;
+}
+
+.userTable tbody tr:hover {
+  background: #f8faff;
+}
+
+.userCell {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 11px;
+}
+
+.avatar,
+.avatarFallback {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #e4edff;
+  color: #2862ee;
+  font-size: 10px;
+  font-weight: 750;
+  object-fit: cover;
+}
+
+.avatarFallback svg {
+  width: 17px;
+  height: 17px;
+}
+
+.userCell strong {
+  overflow: hidden;
+  color: #1b2942;
+  font-size: 11px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.emailCell {
+  color: #65748d !important;
+  white-space: nowrap;
+}
+
+.roleCell {
+  white-space: nowrap;
+}
+
+.statusBadge {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.active {
+  background: #d8f7e9;
+  color: #07845c;
+}
+
+.inactive {
+  background: #edf0f5;
+  color: #69778d;
+}
+
+.rowActions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.editButton,
+.deleteButton {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #00a978;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.editButton:hover {
+  background: #eaf9f2;
+}
+
+.deleteButton {
+  color: #d34b56;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background: #fff0f1;
+}
+
+.deleteButton:disabled {
+  color: #a9b2c0;
+  cursor: not-allowed;
+}
+
+.editButton svg,
+.deleteButton svg {
+  width: 14px;
+  height: 14px;
+}
+
+.emptyState {
+  padding: 40px 16px;
+  color: #8794aa;
+  font-size: 12px;
+  text-align: center;
+}
+
+.pageError,
+.modalError {
+  padding: 11px 13px;
+  border: 1px solid #f2caca;
+  border-radius: 6px;
+  background: #fff2f2;
+  color: #a52b2b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pageError {
+  margin: 0 24px 14px;
+}
+
+.loading {
+  padding: 30px;
+  color: #71809a;
+  font-size: 13px;
+}
+
+.dialogRoot {
+  position: relative;
+  z-index: 50;
+}
+
+.dialogBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 25, 45, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+.dialogScroll {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+}
+
+.dialogCenter {
+  display: flex;
+  min-height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.dialogPanel {
+  width: min(100%, 520px);
+  padding: 25px;
+  border: 1px solid #e4eaf3;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(10, 24, 48, 0.22);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 21px;
+}
+
+.modalEyebrow {
+  margin: 0 0 5px;
+  color: #00a978;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.modalTitle {
+  margin: 0;
+  color: #17233a;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.modalClose {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border: 1px solid #e1e7f0;
+  border-radius: 6px;
+  background: #fff;
+  color: #71809a;
+  cursor: pointer;
+}
+
+.modalClose:hover {
+  background: #f5f7fb;
+  color: #273752;
+}
+
+.modalClose:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.modalClose svg {
+  width: 17px;
+  height: 17px;
+}
+
+.userForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.formField label {
+  color: #34445e;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.formField input,
+.formField select {
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 11px;
+  border: 1px solid #d9e2ef;
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+  color: #293952;
+  font: inherit;
+  font-size: 12px;
+}
+
+.formField input:focus,
+.formField select:focus {
+  border-color: #83a7fa;
+  box-shadow: 0 0 0 3px rgba(40, 98, 238, 0.1);
+}
+
+.formField input:disabled,
+.formField select:disabled {
+  background: #f3f6fb;
+  color: #8794aa;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding-top: 6px;
+  border-top: 1px solid #edf0f5;
+}
+
+.cancelButton,
+.submitButton {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cancelButton {
+  border: 1px solid #d9e2ef;
+  background: #fff;
+  color: #596981;
+}
+
+.submitButton {
+  border: 1px solid #2862ee;
+  background: #2862ee;
+  color: #fff;
+}
+
+.cancelButton:hover {
+  background: #f6f8fc;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #1e52d0;
+}
+
+.cancelButton:disabled,
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 720px) {
+  .pageHeader {
+    min-height: 70px;
+    padding: 0 4px 16px;
+  }
+
+  .directoryHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px 18px 16px;
+  }
+
+  .tableWrap {
+    padding: 0 12px 14px;
+  }
+
+  .pageError {
+    margin-right: 18px;
+    margin-left: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dialogCenter {
+    align-items: flex-end;
+    padding: 10px;
+  }
+
+  .dialogPanel {
+    padding: 18px;
+    border-radius: 9px 9px 5px 5px;
+  }
+}

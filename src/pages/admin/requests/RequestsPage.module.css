@@ -1,0 +1,631 @@
+.page {
+  min-height: 100%;
+  color: #14213a;
+  font-family: 'Avenir Next', 'Segoe UI', sans-serif;
+}
+
+.pageHeader {
+  display: flex;
+  min-height: 80px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 0 20px 18px;
+}
+
+.breadcrumb {
+  margin: 0 0 5px;
+  color: #8794aa;
+  font-size: 12px;
+}
+
+.breadcrumb span {
+  padding: 0 5px;
+  color: #a7b1c1;
+}
+
+.pageHeader h1 {
+  margin: 0;
+  color: #101b31;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.createButton {
+  display: inline-flex;
+  min-height: 38px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid #d9e2ef;
+  border-radius: 7px;
+  background: #fff;
+  color: #3f5270;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.createButton:hover {
+  border-color: #c4d4f4;
+  background: #f7f9ff;
+  color: #2862ee;
+}
+
+.createButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.history {
+  overflow: hidden;
+  border: 1px solid #e4eaf3;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(28, 49, 83, 0.035);
+}
+
+.historyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px 24px 18px;
+}
+
+.historyHeader h2 {
+  margin: 0;
+  color: #17233a;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.historyHeader p {
+  margin: 6px 0 0;
+  color: #8794aa;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.filterToggle {
+  display: inline-flex;
+  min-height: 38px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid #d9e2ef;
+  border-radius: 7px;
+  background: #fff;
+  color: #3f5270;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.filterToggle:hover,
+.filterToggleActive {
+  border-color: #c4d4f4;
+  background: #f7f9ff;
+  color: #2862ee;
+}
+
+.filterToggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.filterToggle:focus-visible,
+.statusFilter:focus-within,
+.approveButton:focus-visible,
+.rejectButton:focus-visible,
+.detailButton:focus-visible,
+.createButton:focus-visible,
+.modalClose:focus-visible,
+.cancelButton:focus-visible,
+.submitButton:focus-visible {
+  outline: 3px solid rgba(40, 98, 238, 0.16);
+  outline-offset: 2px;
+}
+
+.filterPanel {
+  padding: 0 24px 16px;
+}
+
+.statusFilter {
+  display: flex;
+  width: min(100%, 230px);
+  min-height: 38px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid #d9e2ef;
+  border-radius: 6px;
+  background: #fff;
+  color: #73829a;
+}
+
+.statusFilter svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+
+.statusFilter select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #34445e;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  padding: 0 22px 18px;
+}
+
+.requestTable {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.requestTable th {
+  height: 42px;
+  padding: 0 12px;
+  border-bottom: 1px solid #e8edf4;
+  color: #8b98ad;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.requestTable th:last-child,
+.requestTable td:last-child {
+  text-align: right;
+}
+
+.requestTable td {
+  height: 56px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #edf0f5;
+  color: #52627c;
+  font-size: 11px;
+  vertical-align: middle;
+}
+
+.requestTable tbody tr {
+  transition: background-color 140ms ease;
+}
+
+.requestTable tbody tr:hover {
+  background: #f8faff;
+}
+
+.requesterCell,
+.productCell {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.requesterCell strong,
+.productCell strong {
+  overflow: hidden;
+  color: #1b2942;
+  font-size: 11px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.requesterCell span,
+.productCell span {
+  overflow: hidden;
+  color: #8794aa;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quantityCell {
+  white-space: nowrap;
+}
+
+.dateCell {
+  color: #7f8da4 !important;
+  white-space: nowrap;
+}
+
+.statusBadge {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.pending {
+  background: #fff1c9;
+  color: #a56a00;
+}
+
+.approved {
+  background: #d8f7e9;
+  color: #07845c;
+}
+
+.rejected {
+  background: #ffe4e7;
+  color: #c9364c;
+}
+
+.rowActions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.approveButton,
+.rejectButton {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 140ms ease, transform 140ms ease;
+}
+
+.approveButton {
+  background: #dff7eb;
+  color: #07845c;
+}
+
+.approveButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #c9f0dc;
+}
+
+.rejectButton {
+  background: #ffe7e9;
+  color: #cb4050;
+}
+
+.rejectButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #ffd3d8;
+}
+
+.approveButton svg,
+.rejectButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.approveButton:disabled,
+.rejectButton:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.detailButton {
+  min-height: 30px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #00a978;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.detailButton:hover {
+  background: #eaf9f2;
+}
+
+.emptyState {
+  height: 100px !important;
+  color: #8794aa !important;
+  font-size: 12px !important;
+  text-align: center !important;
+}
+
+.pageError,
+.modalError {
+  padding: 11px 13px;
+  border: 1px solid #f2caca;
+  border-radius: 6px;
+  background: #fff2f2;
+  color: #a52b2b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pageError {
+  margin: 0 24px 14px;
+}
+
+.loading {
+  padding: 30px;
+  color: #71809a;
+  font-size: 13px;
+}
+
+.dialogRoot {
+  position: relative;
+  z-index: 50;
+}
+
+.dialogBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 25, 45, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+.dialogScroll {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+}
+
+.dialogCenter {
+  display: flex;
+  min-height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.dialogPanel {
+  width: min(100%, 520px);
+  padding: 25px;
+  border: 1px solid #e4eaf3;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(10, 24, 48, 0.22);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 21px;
+}
+
+.modalEyebrow {
+  margin: 0 0 5px;
+  color: #00a978;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.modalTitle {
+  margin: 0;
+  color: #17233a;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.modalClose {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border: 1px solid #e1e7f0;
+  border-radius: 6px;
+  background: #fff;
+  color: #71809a;
+  cursor: pointer;
+}
+
+.modalClose:hover {
+  background: #f5f7fb;
+  color: #273752;
+}
+
+.modalClose svg {
+  width: 17px;
+  height: 17px;
+}
+
+.requestForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.formField label {
+  color: #34445e;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.formField input,
+.formField select,
+.formField textarea {
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 11px;
+  border: 1px solid #d9e2ef;
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+  color: #293952;
+  font: inherit;
+  font-size: 12px;
+}
+
+.formField textarea {
+  min-height: 82px;
+  resize: vertical;
+}
+
+.formField input:focus,
+.formField select:focus,
+.formField textarea:focus {
+  border-color: #83a7fa;
+  box-shadow: 0 0 0 3px rgba(40, 98, 238, 0.1);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding-top: 6px;
+  border-top: 1px solid #edf0f5;
+}
+
+.cancelButton,
+.submitButton {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cancelButton {
+  border: 1px solid #d9e2ef;
+  background: #fff;
+  color: #596981;
+}
+
+.submitButton {
+  border: 1px solid #2862ee;
+  background: #2862ee;
+  color: #fff;
+}
+
+.cancelButton:hover {
+  background: #f6f8fc;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #1e52d0;
+}
+
+.cancelButton:disabled,
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.detailList {
+  display: grid;
+  gap: 0;
+  margin: 0 0 20px;
+}
+
+.detailList div {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.detailList dt {
+  color: #8794aa;
+  font-size: 11px;
+}
+
+.detailList dd {
+  margin: 0;
+  color: #293952;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .pageHeader {
+    min-height: 70px;
+    padding: 0 4px 16px;
+  }
+
+  .historyHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px 18px 16px;
+  }
+
+  .filterPanel {
+    padding: 0 18px 16px;
+  }
+
+  .tableWrap {
+    padding: 0 12px 14px;
+  }
+
+  .pageError {
+    margin-right: 18px;
+    margin-left: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageHeader {
+    align-items: flex-start;
+  }
+
+  .createButton {
+    min-height: 34px;
+    padding: 0 9px;
+    font-size: 10px;
+  }
+
+  .dialogCenter {
+    align-items: flex-end;
+    padding: 10px;
+  }
+
+  .dialogPanel {
+    padding: 18px;
+    border-radius: 9px 9px 5px 5px;
+  }
+}

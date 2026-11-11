@@ -1,0 +1,91 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(16, 35, 74, 0.45);
+}
+
+.modal {
+  width: min(100%, 420px);
+  padding: 24px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(16, 35, 74, 0.22);
+  text-align: center;
+}
+
+.icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.iconDanger { background: #fee2e2; color: #dc2626; }
+.iconPrimary { background: #dcfce7; color: #16a34a; }
+
+.title {
+  margin: 0 0 8px;
+  color: #10234a;
+  font-size: 18px;
+}
+
+.message {
+  margin: 0;
+  color: #526784;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.error {
+  margin: 12px 0 0;
+  color: #b91c1c;
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.actions button {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid #d5e0f1;
+  border-radius: 7px;
+  background: #fff;
+  color: #405574;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.actions button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.confirmPrimary {
+  border-color: #2860f5 !important;
+  background: #2860f5 !important;
+  color: #fff !important;
+}
+
+.confirmDanger {
+  border-color: #dc2626 !important;
+  background: #dc2626 !important;
+  color: #fff !important;
+}

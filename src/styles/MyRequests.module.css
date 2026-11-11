@@ -1,0 +1,326 @@
+.page {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  color: #14213a;
+  font-family: 'Avenir Next', 'Segoe UI', sans-serif;
+}
+
+.requestsPanel {
+  overflow: hidden;
+  border: 1px solid #e4eaf3;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(28, 49, 83, 0.035);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px 24px 18px;
+}
+
+.panelHeader h1 {
+  margin: 0;
+  color: #17233a;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.panelHeader p {
+  margin: 6px 0 0;
+  color: #8794aa;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.newRequestButton {
+  display: inline-flex;
+  min-height: 38px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 7px;
+  background: #2862ee;
+  box-shadow: 0 6px 14px rgba(40, 98, 238, 0.2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.newRequestButton:hover {
+  transform: translateY(-1px);
+  background: #1e52d0;
+  color: #fff;
+}
+
+.newRequestButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.filterHeader {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 24px 14px;
+  color: #8794aa;
+  font-size: 10px;
+}
+
+.filterToggle {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid #d9e2ef;
+  border-radius: 6px;
+  background: #fff;
+  color: #3f5270;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.filterToggle:hover,
+.filterToggleActive {
+  border-color: #c4d4f4;
+  background: #f7f9ff;
+  color: #2862ee;
+}
+
+.filterToggle svg {
+  width: 15px;
+  height: 15px;
+}
+
+.filterPanel {
+  padding: 0 24px 16px;
+}
+
+.statusFilter {
+  display: flex;
+  width: min(100%, 230px);
+  min-height: 36px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid #d9e2ef;
+  border-radius: 6px;
+  background: #fff;
+  color: #73829a;
+}
+
+.statusFilter svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+
+.statusFilter select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #34445e;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  padding: 0 22px 18px;
+}
+
+.requestTable {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.requestTable th {
+  height: 42px;
+  padding: 0 12px;
+  border-bottom: 1px solid #e8edf4;
+  color: #8b98ad;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.requestTable td {
+  height: 56px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #edf0f5;
+  color: #52627c;
+  font-size: 11px;
+  vertical-align: middle;
+}
+
+.requestTable tbody tr {
+  transition: background-color 140ms ease;
+}
+
+.requestTable tbody tr:hover {
+  background: #f8faff;
+}
+
+.productCell {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.productCell strong {
+  overflow: hidden;
+  color: #1b2942;
+  font-size: 11px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.productCell span {
+  overflow: hidden;
+  color: #8794aa;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quantityCell,
+.dateCell {
+  color: #687790 !important;
+  white-space: nowrap;
+}
+
+.statusBadge {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.statusPending {
+  background: #fff1c9;
+  color: #a56a00;
+}
+
+.statusApproved {
+  background: #d8f7e9;
+  color: #07845c;
+}
+
+.statusRejected {
+  background: #ffe4e7;
+  color: #c9364c;
+}
+
+.statusProcessing {
+  background: #e5eeff;
+  color: #2862ee;
+}
+
+.commentCell {
+  max-width: 250px;
+  overflow: hidden;
+  color: #687790 !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.emptyState {
+  display: flex;
+  min-height: 220px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 16px;
+  color: #8794aa;
+  text-align: center;
+}
+
+.emptyState svg {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 12px;
+  color: #9aabc2;
+}
+
+.emptyState h2 {
+  margin: 0;
+  color: #34445e;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.emptyState p {
+  margin: 6px 0 0;
+  font-size: 11px;
+}
+
+.loadingContainer,
+.error {
+  display: flex;
+  min-height: 40vh;
+  align-items: center;
+  justify-content: center;
+  color: #71809a;
+  font-size: 12px;
+}
+
+.error {
+  color: #a52b2b;
+}
+
+.errorIcon {
+  margin-right: 8px;
+  color: #d34b56;
+}
+
+.errorText {
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .panelHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px 18px 14px;
+  }
+
+  .filterHeader {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .filterPanel {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .tableWrap {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+}

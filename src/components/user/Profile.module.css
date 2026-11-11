@@ -1,0 +1,119 @@
+/* Perfil - estilos generales */
+.profile-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .profile-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+  }
+  
+  .profile-subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: #475569;
+  }
+  
+  /* Cards */
+  .profile-card,
+  .security-card {
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(2, 6, 23, 0.06);
+  }
+  
+  /* Encabezado de cada Card (AntD) */
+  .profile-card .ant-card-head,
+  .security-card .ant-card-head {
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    padding: 0 16px;
+  }
+  .profile-card .ant-card-head-title,
+  .security-card .ant-card-head-title {
+    font-weight: 600;
+  }
+  
+  /* Contenido de Cards */
+  .profile-card .ant-card-body,
+  .security-card .ant-card-body {
+    padding: 16px;
+  }
+  
+  /* Avatar y botón Subir */
+  .profile-avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  
+  .profile-avatar-row .ant-upload-select {
+    margin-left: 4px;
+  }
+  
+  /* Formulario - Perfil */
+  .profile-form .ant-form-item-label > label {
+    font-weight: 600;
+    color: #0f172a;
+  }
+  .profile-form .ant-input,
+  .profile-form .ant-input-password {
+    border-radius: 8px;
+  }
+  .profile-form .ant-input:focus,
+  .profile-form .ant-input:hover,
+  .profile-form .ant-input-password:focus-within,
+  .profile-form .ant-input-password:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+  }
+  
+  /* Footer del formulario */
+  .profile-actions {
+    margin-top: 8px;
+  }
+  
+  /* Seguridad (cambio de contraseña) */
+  .security-form .ant-form-item-label > label {
+    font-weight: 600;
+    color: #0f172a;
+  }
+  
+  /* Botones primarios */
+  .profile-page .ant-btn-primary {
+    background: #3b82f6;
+    border-color: #3b82f6;
+  }
+  .profile-page .ant-btn-primary:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+  }
+  
+  /* Estados de carga */
+  .profile-skeleton .ant-card {
+    border-radius: 10px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .profile-page {
+      padding: 16px;
+    }
+    .profile-avatar-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  }

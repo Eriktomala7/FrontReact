@@ -1,0 +1,345 @@
+.user-layout {
+  display: flex;
+  min-height: 100vh;
+  color: #14213a;
+  font-family: 'Avenir Next', 'Segoe UI', sans-serif;
+}
+
+.user-layout .sidebar {
+  z-index: 1;
+  display: flex;
+  width: 250px;
+  flex: 0 0 250px;
+  flex-direction: column;
+  min-height: 100vh;
+  border-right: 1px solid #e5eaf2;
+  background: #fff;
+}
+
+.user-layout .sidebar-header {
+  display: flex;
+  min-height: 82px;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.user-layout .user-brand-mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border-radius: 11px;
+  background: #2862ee;
+  box-shadow: 0 6px 14px rgba(40, 98, 238, 0.2);
+  color: #fff;
+}
+
+.user-layout .user-brand-mark svg {
+  width: 21px;
+  height: 21px;
+}
+
+.user-layout .user-brand-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-layout .user-brand-copy strong {
+  color: #152139;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.user-layout .user-brand-copy small {
+  color: #8290a8;
+  font-size: 8px;
+  letter-spacing: 1.4px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.user-layout .menu {
+  flex: 1;
+  padding: 26px 10px 16px;
+}
+
+.user-layout .menu-label {
+  margin: 0 10px 12px;
+  color: #91a0b8;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1.7px;
+}
+
+.user-layout .menu-item {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  margin: 3px 0;
+  padding: 0 11px;
+  border-left: 3px solid transparent;
+  border-radius: 8px;
+  color: #566780;
+  font-size: 12px;
+  font-weight: 550;
+  text-decoration: none;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.user-layout .menu-item:hover {
+  background: #f6f8fc;
+  color: #2862ee;
+}
+
+.user-layout .menu-item.active {
+  border-left-color: #2862ee;
+  background: #edf4ff;
+  color: #2862ee;
+  font-weight: 700;
+}
+
+.user-layout .menu-item .icon {
+  display: flex;
+  flex: 0 0 20px;
+  align-items: center;
+  justify-content: center;
+  margin-right: 11px;
+}
+
+.user-layout .sidebar-footer {
+  padding: 14px;
+  border-top: 1px solid #edf0f5;
+}
+
+.user-layout .logout-btn {
+  display: flex;
+  width: 100%;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border: 1px solid #e1e7f0;
+  border-radius: 7px;
+  background: #fff;
+  color: #63728b;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
+}
+
+.user-layout .logout-btn:hover {
+  border-color: #cfd9e8;
+  background: #f8faff;
+  color: #233653;
+}
+
+.user-layout .logout-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.user-main {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  background: #f3f6fb;
+}
+
+.user-topbar {
+  display: flex;
+  min-height: 80px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 14px 40px;
+  border-bottom: 1px solid #e5eaf2;
+  background: #fff;
+}
+
+.user-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 5px;
+  color: #8794aa;
+  font-size: 12px;
+}
+
+.user-breadcrumb svg {
+  width: 12px;
+  height: 12px;
+}
+
+.user-topbar h1 {
+  margin: 0;
+  color: #101b31;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.user-account {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.notification-link {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid #e2e8f1;
+  border-radius: 9px;
+  color: #5e6f89;
+  text-decoration: none;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.notification-link:hover {
+  background: #f6f8fc;
+  color: #2862ee;
+}
+
+.notification-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.account-avatar {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e4edff;
+  color: #2862ee;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.account-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.account-copy strong {
+  overflow: hidden;
+  color: #18243b;
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-copy small {
+  color: #8794aa;
+  font-size: 11px;
+}
+
+.user-layout .main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 30px 40px 44px;
+  overflow: auto;
+  background: #f3f6fb;
+}
+
+@media (max-width: 1024px) {
+  .user-layout .sidebar {
+    width: 220px;
+    flex-basis: 220px;
+  }
+
+  .user-topbar {
+    padding-right: 28px;
+    padding-left: 28px;
+  }
+
+  .user-layout .main-content {
+    padding-right: 28px;
+    padding-left: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-layout .sidebar {
+    width: 72px;
+    flex-basis: 72px;
+  }
+
+  .user-layout .sidebar-header {
+    justify-content: center;
+    padding: 14px 8px;
+  }
+
+  .user-layout .user-brand-copy,
+  .user-layout .menu-label,
+  .user-layout .menu-item > span:not(.icon),
+  .user-layout .logout-btn > span {
+    display: none;
+  }
+
+  .user-layout .menu {
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+
+  .user-layout .menu-item {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .user-layout .menu-item .icon {
+    margin-right: 0;
+  }
+
+  .user-layout .sidebar-footer {
+    padding: 10px 7px;
+  }
+
+  .user-layout .logout-btn {
+    padding: 8px;
+  }
+
+  .user-topbar {
+    padding: 12px 18px;
+  }
+
+  .user-layout .main-content {
+    padding: 22px 18px 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-layout .sidebar {
+    width: 60px;
+    flex-basis: 60px;
+  }
+
+  .account-copy,
+  .notification-link {
+    display: none;
+  }
+
+  .user-topbar h1 {
+    font-size: 17px;
+  }
+
+  .user-layout .main-content {
+    padding: 18px 12px 26px;
+  }
+}

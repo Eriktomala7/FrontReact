@@ -1,0 +1,498 @@
+.page {
+  min-height: 100%;
+  color: #14213a;
+  font-family: 'Avenir Next', 'Segoe UI', sans-serif;
+}
+
+.pageHeader {
+  display: flex;
+  min-height: 80px;
+  align-items: center;
+  padding: 0 20px 18px;
+}
+
+.breadcrumb {
+  margin: 0 0 5px;
+  color: #8794aa;
+  font-size: 12px;
+}
+
+.breadcrumb span {
+  padding: 0 5px;
+  color: #a7b1c1;
+}
+
+.pageHeader h1 {
+  margin: 0;
+  color: #101b31;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.catalog {
+  padding: 22px 24px 24px;
+  border: 1px solid #e4eaf3;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(28, 49, 83, 0.035);
+}
+
+.catalogHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.catalogHeader h2 {
+  margin: 0;
+  color: #17233a;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.catalogHeader p {
+  margin: 6px 0 0;
+  color: #8794aa;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.addButton {
+  display: inline-flex;
+  min-height: 40px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 7px;
+  background: #2862ee;
+  box-shadow: 0 6px 14px rgba(40, 98, 238, 0.2);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.addButton:hover {
+  transform: translateY(-1px);
+  background: #1e52d0;
+}
+
+.addButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.addButton:focus-visible,
+.editButton:focus-visible,
+.deleteButton:focus-visible,
+.modalClose:focus-visible,
+.cancelButton:focus-visible,
+.submitButton:focus-visible {
+  outline: 3px solid rgba(40, 98, 238, 0.25);
+  outline-offset: 2px;
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.categoryCard {
+  display: flex;
+  min-width: 0;
+  min-height: 116px;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 15px;
+  border: 1px solid #e1e8f2;
+  border-radius: 7px;
+  background: #fff;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.categoryCard:hover {
+  border-color: #cbd9f2;
+  background: #fbfcff;
+}
+
+.categoryContent {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.categoryIcon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border-radius: 8px;
+  background: #edf4ff;
+  color: #2862ee;
+}
+
+.categoryIcon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.categoryText {
+  min-width: 0;
+}
+
+.categoryText h3 {
+  overflow: hidden;
+  margin: 0;
+  color: #1b2942;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.categoryText p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 4px 0 0;
+  color: #8794aa;
+  font-size: 10px;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.categoryFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.statusBadge {
+  display: inline-flex;
+  min-height: 22px;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.active {
+  background: #d8f7e9;
+  color: #07845c;
+}
+
+.inactive {
+  background: #edf0f5;
+  color: #69778d;
+}
+
+.categoryActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.editButton,
+.deleteButton {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #00a978;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.editButton:hover {
+  background: #eaf9f2;
+}
+
+.deleteButton {
+  color: #d34b56;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background: #fff0f1;
+}
+
+.deleteButton:disabled {
+  color: #a9b2c0;
+  cursor: not-allowed;
+}
+
+.editButton svg,
+.deleteButton svg {
+  width: 14px;
+  height: 14px;
+}
+
+.emptyState {
+  padding: 40px 16px;
+  color: #8794aa;
+  font-size: 12px;
+  text-align: center;
+}
+
+.pageError,
+.modalError {
+  padding: 11px 13px;
+  border: 1px solid #f2caca;
+  border-radius: 6px;
+  background: #fff2f2;
+  color: #a52b2b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pageError {
+  margin-bottom: 16px;
+}
+
+.loading {
+  padding: 30px;
+  color: #71809a;
+  font-size: 13px;
+}
+
+.dialogRoot {
+  position: relative;
+  z-index: 50;
+}
+
+.dialogBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 25, 45, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+.dialogScroll {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+}
+
+.dialogCenter {
+  display: flex;
+  min-height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.dialogPanel {
+  width: min(100%, 520px);
+  padding: 25px;
+  border: 1px solid #e4eaf3;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(10, 24, 48, 0.22);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.modalEyebrow {
+  margin: 0 0 5px;
+  color: #00a978;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.modalTitle {
+  margin: 0;
+  color: #17233a;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.modalClose {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border: 1px solid #e1e7f0;
+  border-radius: 6px;
+  background: #fff;
+  color: #71809a;
+  cursor: pointer;
+}
+
+.modalClose:hover {
+  background: #f5f7fb;
+  color: #273752;
+}
+
+.modalClose:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.modalClose svg {
+  width: 17px;
+  height: 17px;
+}
+
+.categoryForm {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.formField label {
+  color: #34445e;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.formField input,
+.formField textarea,
+.formField select {
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 11px;
+  border: 1px solid #d9e2ef;
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+  color: #293952;
+  font: inherit;
+  font-size: 12px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.formField textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.formField input:focus,
+.formField textarea:focus,
+.formField select:focus {
+  border-color: #83a7fa;
+  box-shadow: 0 0 0 3px rgba(40, 98, 238, 0.1);
+}
+
+.formField input:disabled,
+.formField textarea:disabled,
+.formField select:disabled {
+  background: #f3f6fb;
+  color: #8794aa;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding-top: 5px;
+  border-top: 1px solid #edf0f5;
+}
+
+.cancelButton,
+.submitButton {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cancelButton {
+  border: 1px solid #d9e2ef;
+  background: #fff;
+  color: #596981;
+}
+
+.cancelButton:hover {
+  background: #f6f8fc;
+}
+
+.submitButton {
+  border: 1px solid #2862ee;
+  background: #2862ee;
+  color: #fff;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #1e52d0;
+}
+
+.cancelButton:disabled,
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 720px) {
+  .pageHeader {
+    min-height: 70px;
+    padding: 0 4px 16px;
+  }
+
+  .catalog {
+    padding: 18px;
+  }
+
+  .catalogHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .categoryGrid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .dialogPanel {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dialogCenter {
+    align-items: flex-end;
+    padding: 10px;
+  }
+
+  .dialogPanel {
+    padding: 18px;
+    border-radius: 9px 9px 5px 5px;
+  }
+}

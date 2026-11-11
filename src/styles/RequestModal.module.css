@@ -1,0 +1,268 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(14, 25, 45, 0.48);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 25px;
+  border: 1px solid #e4eaf3;
+  border-radius: 9px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 70px rgba(10, 24, 48, 0.22);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #17233a;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border: 1px solid #e1e7f0;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+  background-color: #f3f4f6;
+}
+
+.closeIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #6b7280;
+}
+
+.productInfo {
+  margin-bottom: 1.25rem;
+  padding: 12px;
+  border: 1px solid #e7edf6;
+  border-radius: 6px;
+  background: #f8faff;
+}
+
+.productInfo h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  color: #1b2942;
+}
+
+.productInfo p {
+  margin: 0.25rem 0;
+  color: #71809a;
+  font-size: 0.75rem;
+}
+
+.requestForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.quantitySelector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.quantityButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  background-color: #f3f6fb;
+  border: 1px solid #d9e2ef;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.quantityButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantityButton:not(:disabled):hover {
+  background-color: #e5e7eb;
+}
+
+.quantityInput {
+  width: 4rem;
+  height: 2.5rem;
+  text-align: center;
+  font-size: 1.1rem;
+  border: 1px solid #d9e2ef;
+  border-radius: 6px;
+  -moz-appearance: textfield;
+}
+
+.quantityInput::-webkit-outer-spin-button,
+.quantityInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.formGroup {
+  margin: 1.5rem 0;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d9e2ef;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 5rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #83a7fa;
+  box-shadow: 0 0 0 3px rgba(40, 98, 238, 0.1);
+}
+
+.textarea::placeholder {
+  color: #9ca3af;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #edf0f5;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.cancelButton {
+  background-color: #fff;
+  color: #596981;
+  border: 1px solid #d9e2ef;
+}
+
+.cancelButton:hover {
+  background-color: #e5e7eb;
+}
+
+.submitButton {
+  background-color: #2862ee;
+  color: white;
+}
+
+.submitButton:not(:disabled):hover {
+  background-color: #1e52d0;
+}
+
+.submitButton:disabled {
+  background-color: #9bb8f7;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  color: #a52b2b;
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .modalContent {
+    padding: 18px;
+    border-radius: 9px 9px 5px 5px;
+  }
+
+  .modalActions {
+    gap: 0.5rem;
+  }
+}
+
+.successMessage {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.successIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background-color: #10b981;
+  color: white;
+  font-size: 2rem;
+  line-height: 1;
+  animation: bounce 0.5s;
+}
+
+.successMessage h3 {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.5rem;
+  color: #111827;
+}
+
+.successMessage p {
+  margin: 0;
+  color: #4b5563;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
