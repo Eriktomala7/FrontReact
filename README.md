@@ -1,5 +1,9 @@
 # React + TypeScript + Vite
 
+For Vercel deployments, set the project root directory to the directory containing
+`package.json` and `vercel.json`. The rewrite serves the application for
+client-side routes such as `/login` and `/admin`.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

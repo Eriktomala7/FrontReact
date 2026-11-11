@@ -171,11 +171,8 @@ export const logout = (): void => {
   // Clear axios default headers if any
   delete axios.defaults.headers.common['Authorization'];
   
-  // Force a full page reload to reset the application state
-  window.location.href = '/login';
-  
-  // This ensures the page actually reloads
-  window.location.reload();
+  // Reload the app at login so its authentication state is reset.
+  window.location.replace('/login');
 };
 export const getUserById = async (id: string | number): Promise<UserDetail> => {
   setAxiosAuthHeader(); // asegura el Authorization: Bearer <token>

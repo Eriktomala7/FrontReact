@@ -1,5 +1,5 @@
 // src/components/UserLayout.tsx
-import { Outlet, useLocation, Link, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, Link } from 'react-router-dom';
 import { getCurrentUser, logout } from '../services/authService';
 import {
   HomeIcon,
@@ -53,11 +53,8 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
 
   const currentPage = menuItems.find(item => isActive(item.path));
 
-  const navigate = useNavigate();
-
   const handleLogout = () => {
     logout();
-    navigate('/login');
   };
 
   return (
