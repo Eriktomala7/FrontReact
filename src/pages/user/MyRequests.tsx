@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   ClockIcon,
-  FunnelIcon,
+  ArrowPathIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
 import { getMyRequests } from '../../services/dashboardService';
@@ -52,8 +52,7 @@ const MyRequests = () => {
   const [requests, setRequests] = useState<RequestType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState('TODOS');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<RequestType['estado'] | 'TODOS'>('TODOS');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchRequests = async () => {
@@ -104,6 +103,14 @@ const MyRequests = () => {
     return request.estado === statusFilter;
   });
 
+  const statusCards: { status: RequestType['estado'] | 'TODOS'; label: string; color: string }[] = [
+    { status: 'TODOS', label: 'Total de solicitudes', color: styles.dotTotal },
+    { status: 'PENDIENTE', label: 'Pendientes', color: styles.dotPending },
+    { status: 'EN_PROCESO', label: 'En proceso', color: styles.dotProcessing },
+    { status: 'APROBADA', label: 'Aprobadas', color: styles.dotApproved },
+    { status: 'RECHAZADA', label: 'Rechazadas', color: styles.dotRejected },
+  ];
+
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
@@ -131,18 +138,18 @@ const MyRequests = () => {
         </svg>
 
         <p className={styles.errorText}>{error}</p>
+        <button type="button" className={styles.refreshButton} onClick={fetchRequests}>
+          Reintentar
+        </button>
       </div>
     );
   }
 
   return (
     <main className={styles.page}>
-      <section
-        className={styles.requestsPanel}
-        aria-labelledby="requests-title"
-      >
-        <header className={styles.panelHeader}>
+      <header className={styles.panelHeader}>
           <div>
+            <span className={styles.eyebrow}>Espacio de usuario</span>
             <h1 id="requests-title">Mis solicitudes</h1>
             <p>Consulta el estado de tus requerimientos de productos.</p>
           </div>
@@ -152,56 +159,42 @@ const MyRequests = () => {
             className={styles.newRequestButton}
             onClick={() => setIsModalOpen(true)}
           >
-            <PlusIcon
-  aria-hidden="true"
-  className={styles.plusIcon}
-/>
+            <PlusIcon aria-hidden="true" className={styles.plusIcon} />
             Nueva solicitud
           </button>
-        </header>
+      </header>
 
-        <div className={styles.filterHeader}>
-          <span>
-            {filteredRequests.length}{' '}
-            {filteredRequests.length === 1 ? 'solicitud' : 'solicitudes'}
-          </span>
-
+      <div className={styles.stats} aria-label="Filtrar solicitudes por estado">
+        {statusCards.map(({ status, label, color }) => (
           <button
-            className={`${styles.filterToggle} ${
-              isFilterOpen ? styles.filterToggleActive : ''
-            }`}
+            key={status}
             type="button"
-            onClick={() => setIsFilterOpen((open) => !open)}
-            aria-expanded={isFilterOpen}
-            aria-controls="request-filter"
+            className={`${styles.statCard} ${statusFilter === status ? styles.statCardActive : ''}`}
+            onClick={() => setStatusFilter(status)}
+            aria-pressed={statusFilter === status}
           >
-            <FunnelIcon aria-hidden="true" />
-            Filtrar estado
+            <span className={`${styles.statDot} ${color}`} aria-hidden="true" />
+            <span className={styles.statLabel}>{label}</span>
+            <strong>{status === 'TODOS' ? requests.length : requests.filter((request) => request.estado === status).length}</strong>
+          </button>
+        ))}
+      </div>
+
+      <section className={styles.requestsPanel} aria-labelledby="history-title">
+        <div className={styles.historyHeader}>
+          <div>
+            <h2 id="history-title">Historial de solicitudes</h2>
+            <p>
+              {filteredRequests.length}{' '}
+              {filteredRequests.length === 1 ? 'solicitud registrada' : 'solicitudes registradas'}
+              {statusFilter === 'TODOS' ? ' en total' : ''}
+            </p>
+          </div>
+          <button type="button" className={styles.refreshButton} onClick={fetchRequests}>
+            <ArrowPathIcon aria-hidden="true" />
+            Actualizar
           </button>
         </div>
-
-        {isFilterOpen && (
-          <div
-            id="request-filter"
-            className={styles.filterPanel}
-          >
-            <label className={styles.statusFilter}>
-              <FunnelIcon aria-hidden="true" />
-
-              <select
-                value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value)}
-                aria-label="Filtrar por estado"
-              >
-                <option value="TODOS">Todos los estados</option>
-                <option value="PENDIENTE">Pendientes</option>
-                <option value="APROBADA">Aprobadas</option>
-                <option value="RECHAZADA">Rechazadas</option>
-                <option value="EN_PROCESO">En proceso</option>
-              </select>
-            </label>
-          </div>
-        )}
 
         {filteredRequests.length > 0 ? (
           <div className={styles.tableWrap}>
@@ -221,20 +214,19 @@ const MyRequests = () => {
                   <tr key={request.id}>
                     <td>
                       <div className={styles.productCell}>
-                        <strong>
-                          {request.producto?.nombre ||
-                            'Producto no disponible'}
-                        </strong>
-
-                        <span>
-                          {request.producto?.codigo || 'N/A'}
+                        <span className={styles.productInitial} aria-hidden="true">
+                          {(request.producto?.nombre?.trim().charAt(0) || '?').toUpperCase()}
                         </span>
+                        <div>
+                          <strong>{request.producto?.nombre || 'Producto no disponible'}</strong>
+                          <span>{request.producto?.codigo || 'N/A'}</span>
+                        </div>
                       </div>
                     </td>
 
                     <td className={styles.quantityCell}>
-                      {request.cantidad ?? 0}{' '}
-                      {request.producto?.unidad_medida || 'unidades'}
+                      <span>{request.cantidad ?? 0}{' '}
+                      {request.producto?.unidad_medida || 'unidades'}</span>
                     </td>
 
                     <td className={styles.dateCell}>
@@ -258,7 +250,7 @@ const MyRequests = () => {
                     <td className={styles.commentCell}>
                       {request.comentario_admin ||
                         request.comentario ||
-                        '—'}
+                        'Sin comentario'}
                     </td>
                   </tr>
                 ))}
