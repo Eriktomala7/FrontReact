@@ -38,17 +38,6 @@ const RequestProductModal: React.FC<RequestProductModalProps> = ({
     }
   }, [isOpen]);
 
-  const handleQuantityChange = (value: number) => {
-    if (!product) return;
-    const newQuantity = Math.max(1, Math.min(product.cantidad, value));
-    setQuantity(newQuantity);
-    if (newQuantity > product.cantidad) {
-      setError(`No puedes solicitar más de ${product.cantidad} ${product.unidad_medida || 'unidades'}`);
-    } else {
-      setError(null);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (quantity < 1) {

@@ -7,7 +7,6 @@ import {
   BellAlertIcon,
   CubeIcon,
   DocumentTextIcon,
-  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import RequestProductModal from '../../components/RequestProductModal';
 import { getCurrentUser } from '../../services/authService';

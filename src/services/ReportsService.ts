@@ -86,7 +86,6 @@ export interface MovimientoReporte {
 async function extractBlobError(err: unknown): Promise<never> {
   if (axios.isAxiosError(err)) {
     const status = err.response?.status;
-    const contentType = err.response?.headers?.['content-type'];
     try {
       // When responseType is 'blob', errors come as Blob too
       const blob = err.response?.data as Blob | undefined;
