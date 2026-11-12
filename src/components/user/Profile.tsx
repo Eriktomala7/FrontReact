@@ -87,7 +87,7 @@ const Profile = () => {
       await updateUserPassword(user.id, values.newPassword);
       message.success('Contraseña actualizada');
       passwordForm.resetFields();
-    } catch (e) {
+    } catch {
       message.error('No se pudo actualizar la contraseña');
     } finally {
       setSavingPwd(false);
@@ -120,7 +120,7 @@ const Profile = () => {
   if (loadingUser) {
     return (
       <div className={styles.profilePage}>
-        <Card className={styles.profileCard} title="Mi Perfil" loading bordered />
+        <Card className={styles.profileCard} title="Información personal" loading bordered />
       </div>
     );
   }
@@ -128,7 +128,7 @@ const Profile = () => {
   if (!user) {
     return (
       <div className={styles.profilePage}>
-        <Card className={styles.profileCard} title="Mi Perfil" bordered>
+        <Card className={styles.profileCard} title="Información personal" bordered>
           No hay un usuario autenticado. Por favor inicia sesión.
         </Card>
       </div>
@@ -137,13 +137,33 @@ const Profile = () => {
 
   return (
     <div className={styles.profilePage}>
+      <section className={styles.profileHeader}>
+        <div>
+          <span className={styles.profileEyebrow}>CUENTA PERSONAL</span>
+          <h2 className={styles.profileTitle}>Tu espacio, tu información</h2>
+          <p className={styles.profileSubtitle}>
+            Mantén tus datos al día y protege el acceso a tu cuenta.
+          </p>
+        </div>
+        <div className={styles.profileHeaderIcon} aria-hidden="true">
+          <UserOutlined />
+        </div>
+      </section>
+
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={10}>
-          <Card className={styles.profileCard} title="Mi Perfil" bordered>
+          <Card className={styles.profileCard} title="Información personal" bordered>
             <div className={styles.profileAvatarRow}>
-              <Avatar size={72} src={avatarUrl} icon={<UserOutlined />} />
+              <Avatar className={styles.profileAvatar} size={76} src={avatarUrl} icon={<UserOutlined />} />
+              <div className={styles.profileIdentity}>
+                <strong>{user.nombre || 'Usuario'}</strong>
+                <span>{user.email}</span>
+                <span className={styles.profileRole}>
+                  {user.rol === 'ADMIN' ? 'Administrador' : 'Colaborador'}
+                </span>
+              </div>
               <Upload beforeUpload={beforeUpload} showUploadList={false} accept="image/*">
-                <Button icon={<UploadOutlined />}>Cambiar foto</Button>
+                <Button className={styles.avatarButton} icon={<UploadOutlined />}>Cambiar foto</Button>
               </Upload>
             </div>
 
@@ -177,6 +197,9 @@ const Profile = () => {
 
         <Col xs={24} lg={14}>
           <Card className={styles.securityCard} title="Seguridad" bordered>
+            <p className={styles.securityDescription}>
+              Actualiza tu contraseña periódicamente para mantener tu cuenta protegida.
+            </p>
             <Form
               form={passwordForm}
               className={styles.securityForm}
