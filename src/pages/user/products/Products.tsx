@@ -6,11 +6,11 @@ import {
   ShoppingCartIcon,
   ExclamationCircleIcon
 } from '@heroicons/react/24/outline';
-import RequestProductModal from '../../components/RequestProductModal';
-import { createRequest } from '../../services/dashboardService';
-import { getProducts } from '../../services/dashboardService';
-import { getCurrentUser } from '../../services/authService';
-import type { Product } from '../../services/dashboardService';
+import RequestProductModal from '../../../components/RequestProductModal';
+import { createRequest } from '../../../services/dashboardService';
+import { getProducts } from '../../../services/dashboardService';
+import { getCurrentUser } from '../../../services/authService';
+import type { Product } from '../../../services/dashboardService';
 import styles from './Products.module.css';
 
 interface ProductCardProps {

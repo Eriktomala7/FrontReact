@@ -8,8 +8,8 @@ import {
   CubeIcon,
   DocumentTextIcon,
 } from '@heroicons/react/24/outline';
-import RequestProductModal from '../../components/RequestProductModal';
-import { getCurrentUser } from '../../services/authService';
+import RequestProductModal from '../../../components/RequestProductModal';
+import { getCurrentUser } from '../../../services/authService';
 import {
   createRequest,
   getMyRequests,
@@ -17,8 +17,8 @@ import {
   getRecentMovements,
   type Product,
   type RequestType,
-} from '../../services/dashboardService';
-import type { MovimientoReciente } from '../../types/dashboard';
+} from '../../../services/dashboardService';
+import type { MovimientoReciente } from '../../../types/dashboard';
 import styles from './UserDashboard.module.css';
 
 const UserDashboard = () => {

@@ -8,9 +8,9 @@ import {
   ExclamationTriangleIcon,
   TagIcon,
 } from '@heroicons/react/24/outline';
-import { getCurrentUser } from '../services/authService';
-import { getDashboardStats, getRecentMovements, type DashboardStats } from '../services/dashboardService';
-import type { MovimientoReciente } from '../types/dashboard';
+import { getCurrentUser } from '../../../services/authService';
+import { getDashboardStats, getRecentMovements, type DashboardStats } from '../../../services/dashboardService';
+import type { MovimientoReciente } from '../../../types/dashboard';
 import styles from './Dashboard.module.css';
 
 const Dashboard = () => {

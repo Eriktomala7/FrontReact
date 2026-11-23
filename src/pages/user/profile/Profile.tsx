@@ -20,7 +20,7 @@ import {
   updateUserProfile,
   uploadUserAvatar,
   type User,
-} from '../../services/authService'
+} from '../../../services/authService'
 import styles from './Profile.module.css'
 
 interface UserProfile {

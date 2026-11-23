@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon, CubeIcon } from '@heroicons/react/24/outline';
-import { requestPasswordReset } from '../services/authService';
+import { requestPasswordReset } from '../../services/authService';
 import './Login.css';
 
 const ForgotPassword = () => {

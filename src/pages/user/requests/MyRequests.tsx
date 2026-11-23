@@ -4,9 +4,9 @@ import {
   ArrowPathIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
-import { getMyRequests } from '../../services/dashboardService';
-import NewRequestModal from '../../components/NewRequestModal';
-import type { RequestType } from '../../services/dashboardService';
+import { getMyRequests } from '../../../services/dashboardService';
+import NewRequestModal from '../../../components/NewRequestModal';
+import type { RequestType } from '../../../services/dashboardService';
 
 import styles from './MyRequests.module.css';
 

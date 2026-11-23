@@ -5,8 +5,8 @@ import {
   ClockIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline';
-import { getMyRequests } from '../../services/dashboardService';
-import type { RequestType } from '../../services/dashboardService';
+import { getMyRequests } from '../../../services/dashboardService';
+import type { RequestType } from '../../../services/dashboardService';
 import styles from './UserActivity.module.css';
 
 interface UserActivityProps {

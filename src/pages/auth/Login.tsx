@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRightIcon, CubeIcon } from '@heroicons/react/24/outline';
-import { login } from '../services/authService';
+import { login } from '../../services/authService';
 import './Login.css';
 
 interface UserData {

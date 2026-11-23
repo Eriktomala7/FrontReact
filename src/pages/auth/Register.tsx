@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRightIcon, CubeIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { register } from '../services/authService';
+import { register } from '../../services/authService';
 import './Login.css';
 
 interface RegisterProps {

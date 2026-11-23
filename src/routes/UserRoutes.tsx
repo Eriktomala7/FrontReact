@@ -1,10 +1,10 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import UserLayout from '../../components/UserLayout';
-import UserDashboard from './UserDashboard';
-import Products from './Products';
-import MyRequests from './MyRequests';
-import UserActivity from './UserActivity';
-import Profile from '../../components/user/Profile';
+import UserLayout from '../components/UserLayout';
+import UserDashboard from '../pages/user/dashboard/UserDashboard';
+import Products from '../pages/user/products/Products';
+import MyRequests from '../pages/user/requests/MyRequests';
+import UserActivity from '../pages/user/activity/UserActivity';
+import Profile from '../pages/user/profile/Profile';
 
 const UserRoutes = () => {
   return (

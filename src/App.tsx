@@ -1,11 +1,11 @@
 // App.tsx
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Login from './pages/Login';
-import ForgotPassword from './pages/ForgotPassword';
-import Register from './pages/Register';
-import UserRoutes from './pages/user/UserRoutes';
-import AdminDashboard from './pages/AdminDashboard';
+import Login from './pages/auth/Login';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import Register from './pages/auth/Register';
+import UserRoutes from './routes/UserRoutes';
+import AdminDashboard from './routes/AdminDashboard';
 import { getCurrentUser } from './services/authService';
 import './App.css';
 

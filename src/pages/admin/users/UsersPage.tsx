@@ -4,7 +4,7 @@ import { PencilIcon, PlusIcon, TrashIcon, UserIcon, XMarkIcon } from '@heroicons
 import { Dialog } from '@headlessui/react';
 import { UserForm } from './UserForm';
 import styles from './UsersPage.module.css';
-import ConfirmModal from '../../components/ConfirmModal';
+import ConfirmModal from '../../../components/ConfirmModal';
 
 export interface User {
   id: number;

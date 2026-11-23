@@ -191,7 +191,7 @@ const RequestsPage = () => {
                 <option value="TODOS">Todos los estados</option>
                 <option value="PENDIENTE">Pendientes</option>
                 <option value="APROBADA">Aprobadas</option>
-                <option value="RECHAZADA">Denegadas</option>
+                <option value="RECHAZADA">Rechazados</option>
               </select>
             </label>
           </div>

@@ -1,12 +1,12 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from '../components/AdminLayout';
-import Dashboard from './DashboardAdmin.tsx';
-import UsersPage from './users/UsersPage.tsx';
-import CategoriesPage from './admin/categories/CategoriesPage';
-import ProductsPage from './admin/products/ProductsPage';
-import RequestsPage from './admin/requests/RequestsPage.tsx';
-import MovementsPage from './admin/movements/MovementsPage';
-import ReportsPage from './admin/reports/ReportsPage';
+import Dashboard from '../pages/admin/dashboard/DashboardAdmin';
+import UsersPage from '../pages/admin/users/UsersPage';
+import CategoriesPage from '../pages/admin/categories/CategoriesPage';
+import ProductsPage from '../pages/admin/products/ProductsPage';
+import RequestsPage from '../pages/admin/requests/RequestsPage';
+import MovementsPage from '../pages/admin/movements/MovementsPage';
+import ReportsPage from '../pages/admin/reports/ReportsPage';
 
 const AdminDashboard = () => {
   return (
