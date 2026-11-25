@@ -191,7 +191,7 @@ const RequestsPage = () => {
                 <option value="TODOS">Todos los estados</option>
                 <option value="PENDIENTE">Pendientes</option>
                 <option value="APROBADA">Aprobadas</option>
-                <option value="RECHAZADA">Rechazados</option>
+                <option value="RECHAZADA">Rechazadas</option>
               </select>
             </label>
           </div>
@@ -247,7 +247,7 @@ const RequestsPage = () => {
                     </td>
                     <td>
                       <span className={`${styles.statusBadge} ${statusStyle}`}>
-                        {solicitud.estado_solicitud === 'RECHAZADA' ? 'Denegada' : solicitud.estado_solicitud === 'APROBADA' ? 'Aprobada' : 'Pendiente'}
+                        {solicitud.estado_solicitud === 'RECHAZADA' ? 'Rechazada' : solicitud.estado_solicitud === 'APROBADA' ? 'Aprobada' : 'Pendiente'}
                       </span>
                     </td>
                     <td>
@@ -269,8 +269,8 @@ const RequestsPage = () => {
                               type="button"
                               onClick={() => { setDecisionError(null); setDecision({ solicitud, status: 'RECHAZADA' }); }}
                               disabled={updatingId === solicitud.id}
-                              title="Denegar solicitud"
-                              aria-label={`Denegar solicitud de ${solicitud.usuario.nombre}`}
+                              title="Rechazar solicitud"
+                              aria-label={`Rechazar solicitud de ${solicitud.usuario.nombre}`}
                             >
                               <XMarkIcon aria-hidden="true" />
                             </button>
@@ -366,7 +366,16 @@ const RequestsPage = () => {
                   <div><dt>Solicitante</dt><dd>{selectedSolicitud.usuario.nombre}</dd></div>
                   <div><dt>Producto</dt><dd>{selectedSolicitud.producto.nombre} ({selectedSolicitud.producto.codigo})</dd></div>
                   <div><dt>Cantidad</dt><dd>{selectedSolicitud.cantidad} {selectedSolicitud.producto.unidad_medida}</dd></div>
-                  <div><dt>Estado</dt><dd>{selectedSolicitud.estado_solicitud}</dd></div>
+                  <div>
+                    <dt>Estado</dt>
+                    <dd>
+                      {selectedSolicitud.estado_solicitud === 'RECHAZADA'
+                        ? 'Rechazada'
+                        : selectedSolicitud.estado_solicitud === 'APROBADA'
+                          ? 'Aprobada'
+                          : 'Pendiente'}
+                    </dd>
+                  </div>
                   <div><dt>Fecha</dt><dd>{new Date(selectedSolicitud.fecha).toLocaleString('es-ES')}</dd></div>
                   {selectedSolicitud.comentario && <div><dt>Comentario</dt><dd>{selectedSolicitud.comentario}</dd></div>}
                 </dl>
