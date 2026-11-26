@@ -12,8 +12,10 @@ import { getCurrentUser } from '../../../services/authService';
 import { getDashboardStats, getRecentMovements, type DashboardStats } from '../../../services/dashboardService';
 import type { MovimientoReciente } from '../../../types/dashboard';
 import styles from './Dashboard.module.css';
+import AdminNotifications from '../../../components/AdminNotifications';
+import type { useAdminNotifications } from '../../../components/useAdminNotifications';
 
-const Dashboard = () => {
+const Dashboard = ({ notifications }: { notifications: ReturnType<typeof useAdminNotifications> }) => {
   const [recentMovements, setRecentMovements] = useState<MovimientoReciente[]>([]);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -105,6 +107,7 @@ const Dashboard = () => {
             <h1 className={styles.welcomeTitle}>Buenos días, {firstName}</h1>
           </div>
           <div className={styles.accountSummary}>
+            <AdminNotifications notifications={notifications} />
             <span className={styles.accountAvatar} aria-hidden="true">
               {fullName.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()}
             </span>

@@ -7,12 +7,14 @@ import ProductsPage from '../pages/admin/products/ProductsPage';
 import RequestsPage from '../pages/admin/requests/RequestsPage';
 import MovementsPage from '../pages/admin/movements/MovementsPage';
 import ReportsPage from '../pages/admin/reports/ReportsPage';
+import { useAdminNotifications } from '../components/useAdminNotifications';
 
 const AdminDashboard = () => {
+  const notifications = useAdminNotifications();
   return (
     <AdminLayout>
       <Routes>
-        <Route index element={<Dashboard />} />
+        <Route index element={<Dashboard notifications={notifications} />} />
         <Route path="products" element={<ProductsPage />} />
         <Route path="categorias" element={<CategoriesPage />} />
         <Route path="solicitudes" element={<RequestsPage />} />

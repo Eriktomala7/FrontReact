@@ -1,19 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Alert, Button, Card, Empty, Space, Spin, Statistic, Typography, message } from 'antd';
-import { FileExcelOutlined, FilePdfOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Alert, Button, Empty, Spin, Table, message } from 'antd';
+import { FileExcelOutlined, FilePdfOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import ReportsService from '../../../../services/ReportsService';
 import type { ProductoMasMovimientosReporte } from '../../../../services/ReportsService';
 import { exportExcelReport, exportPdfReport } from '../exportUtils';
-
-const { Title, Paragraph } = Typography;
+import styles from './ReportPanel.module.css';
 
 const EXPLANATION =
   'Cada entrada, salida o ajuste cuenta como una operación. El total no representa unidades, sino cuántas operaciones se registraron para ese producto.';
 
 const TopProductReport = () => {
   const [report, setReport] = useState<ProductoMasMovimientosReporte | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const load = async () => {
@@ -21,15 +20,22 @@ const TopProductReport = () => {
       setLoading(true);
       setError(null);
       setReport(await ReportsService.getProductWithMostMovementsReport());
-    } catch (err: any) {
-      setError(err?.message || 'Error al cargar el reporte de productos con más movimientos');
+    } catch (err: unknown) {
+      console.error('Error al cargar el reporte de productos con más movimientos:', err);
+      setError(err instanceof Error ? err.message : 'Error al cargar el reporte de productos con más movimientos');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    load();
+    ReportsService.getProductWithMostMovementsReport()
+      .then(setReport)
+      .catch((err: unknown) => {
+        console.error('Error al cargar el reporte de productos con más movimientos:', err);
+        setError(err instanceof Error ? err.message : 'Error al cargar el reporte de productos con más movimientos');
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const categoria = report
@@ -84,24 +90,23 @@ const TopProductReport = () => {
   };
 
   return (
-    <div className="p-4">
-      <Card>
-        <div className="flex justify-between items-center mb-4">
-          <Title level={4} className="mb-0">Producto con más movimientos</Title>
-          <Space>
+    <div className={styles.report}>
+        <div className={styles.header}>
+          <h2>Producto con más movimientos</h2>
+          <div className={styles.actions}>
             <Button icon={<FilePdfOutlined />} onClick={() => handleExport('pdf')} disabled={loading || !report}>
               PDF
             </Button>
             <Button icon={<FileExcelOutlined />} onClick={() => handleExport('excel')} disabled={loading || !report}>
               Excel
             </Button>
-            <Button icon={<ReloadOutlined />} onClick={load} loading={loading}>
+            <Button onClick={load} loading={loading}>
               Actualizar
             </Button>
-          </Space>
+          </div>
         </div>
 
-        <Paragraph type="secondary">{EXPLANATION}</Paragraph>
+        <p className={styles.explanation}>{EXPLANATION}</p>
 
         {error && <Alert type="error" showIcon message={error} className="mb-4" />}
 
@@ -110,15 +115,27 @@ const TopProductReport = () => {
             <Empty description="Aún no hay movimientos registrados" />
           )}
           {report && (
-            <div style={{ display: 'flex', gap: 48, flexWrap: 'wrap', padding: '12px 0' }}>
-              <Statistic title="Operaciones registradas" value={report.totalMovimientos} />
-              <Statistic title="Producto" value={report.producto.nombre || 'Producto'} />
-              <Statistic title="Código" value={report.producto.codigo || '—'} />
-              <Statistic title="Categoría" value={categoria} />
+            <div className={styles.table}>
+              <Table
+                columns={[
+                  { title: 'Código', dataIndex: 'codigo', key: 'codigo' },
+                  { title: 'Producto', dataIndex: 'nombre', key: 'nombre' },
+                  { title: 'Categoría', dataIndex: 'categoria', key: 'categoria' },
+                  { title: 'Operaciones registradas', dataIndex: 'totalMovimientos', key: 'totalMovimientos' },
+                ]}
+                dataSource={[{
+                  key: 'top-product',
+                  codigo: report.producto.codigo || '—',
+                  nombre: report.producto.nombre || 'Producto',
+                  categoria,
+                  totalMovimientos: report.totalMovimientos,
+                }]}
+                pagination={false}
+                scroll={{ x: true }}
+              />
             </div>
           )}
         </Spin>
-      </Card>
     </div>
   );
 };

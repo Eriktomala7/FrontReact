@@ -1,0 +1,164 @@
+.container {
+  position: relative;
+}
+
+.bell {
+  position: relative;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid #cddcfa;
+  border-radius: 8px;
+  background: #fff;
+  color: #2862ee;
+  cursor: pointer;
+}
+
+.bell:hover, .bell:focus-visible {
+  background: #f3f7ff;
+}
+
+.bell svg {
+  width: 20px;
+  height: 20px;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 17px;
+  padding: 2px 3px;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  background: #e83c52;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.panel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(340px, calc(100vw - 90px));
+  overflow: hidden;
+  border: 1px solid #dfe8f6;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 8px 26px rgba(28, 49, 83, 0.14);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e8eef7;
+  color: #17233a;
+  font-size: 13px;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.links button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #2862ee;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.links button:disabled {
+  color: #9daac0;
+  cursor: default;
+}
+
+.content {
+  max-height: min(500px, 60vh);
+  overflow-y: auto;
+}
+
+.content h3 {
+  margin: 0;
+  padding: 14px 16px 6px;
+  color: #8190a8;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 0;
+  border-bottom: 1px solid #edf1f7;
+  background: #fff;
+  color: #354c6d;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  text-align: left;
+}
+
+.item:hover, .item:focus-visible {
+  background: #f4f7fc;
+}
+
+.item:disabled {
+  cursor: wait;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: #cad3df;
+}
+
+.unread .dot {
+  background: #e99a00;
+}
+
+.message, .meta {
+  display: block;
+}
+
+.meta {
+  margin-top: 7px;
+  color: #8794aa;
+  font-size: 10px;
+}
+
+.feedback, .error {
+  margin: 0;
+  padding: 12px 16px;
+  color: #71809a;
+  font-size: 11px;
+}
+
+.error {
+  color: #ba3445;
+}
