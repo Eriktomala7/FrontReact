@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from 'react';
-import { Button, DatePicker, Form, Row, Col, Table, Select, message } from 'antd';
+import { Button, DatePicker, Form, Table, Select, message } from 'antd';
 import { SearchOutlined, FilePdfOutlined, FileExcelOutlined, ReloadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import moment from 'moment';
@@ -8,6 +8,8 @@ import ReportsService from '../../../../services/ReportsService';
 import { useForm } from 'antd/es/form/Form';
 import { exportExcelReport, exportPdfReport } from '../exportUtils';
 import { getProducts } from '../../../../services/dashboardService';
+import panelStyles from './ReportPanel.module.css';
+import styles from './MovementReport.module.css';
 
 const { RangePicker } = DatePicker;
 
@@ -90,12 +92,6 @@ const MovementReport = () => {
           <div className="text-gray-500 text-xs">{record.usuario.email}</div>
         </div>
       ),
-    },
-    {
-      title: 'Comentario',
-      dataIndex: 'comentario',
-      key: 'comentario',
-      render: (comentario: string) => comentario || 'N/A',
     },
   ];
 
@@ -236,7 +232,10 @@ const MovementReport = () => {
   };
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow">
+    <div className={panelStyles.report}>
+    <div className={panelStyles.header}>
+      <h2>Movimientos</h2>
+    </div>
     <Form
       form={form}
       layout="vertical"
@@ -245,8 +244,7 @@ const MovementReport = () => {
         tipo: 'TODOS',
       }}
     >
-      <Row gutter={16}>
-        <Col xs={24} md={12} lg={6}>
+      <div className={styles.controls}>
           <Form.Item
             name="dateRange"
             label="Rango de fechas"
@@ -261,9 +259,7 @@ const MovementReport = () => {
               }}
             />
           </Form.Item>
-        </Col>
 
-        <Col xs={24} md={12} lg={4}>
           <Form.Item name="tipo" label="Tipo de movimiento">
             <Select
               options={movementTypes}
@@ -273,9 +269,7 @@ const MovementReport = () => {
               }}
             />
           </Form.Item>
-        </Col>
 
-        <Col xs={24} md={12} lg={6}>
           <Form.Item name="idProducto" label="Producto">
             <Select
               showSearch
@@ -295,9 +289,8 @@ const MovementReport = () => {
               }))}
             />
           </Form.Item>
-        </Col>
 
-        <Col xs={24} md={12} lg={8} className="flex items-end space-x-2">
+        <div className={styles.actions}>
           <Button
             type="primary"
             icon={<SearchOutlined />}
@@ -315,25 +308,25 @@ const MovementReport = () => {
             Limpiar
           </Button>
 
-          <Button 
-    icon={<FilePdfOutlined />} 
-    onClick={() => handleExport('pdf')}
-    disabled={loading || data.length === 0}
-  >
-    Exportar PDF
-  </Button>
-  <Button 
-    icon={<FileExcelOutlined />} 
-    onClick={() => handleExport('excel')}
-    disabled={loading || data.length === 0}
-  >
-    Exportar Excel
-  </Button>
-        </Col>
-      </Row>
+          <Button
+            icon={<FilePdfOutlined />}
+            onClick={() => handleExport('pdf')}
+            disabled={loading || data.length === 0}
+          >
+            Exportar PDF
+          </Button>
+          <Button
+            icon={<FileExcelOutlined />}
+            onClick={() => handleExport('excel')}
+            disabled={loading || data.length === 0}
+          >
+            Exportar Excel
+          </Button>
+        </div>
+      </div>
     </Form>
 
-    <div className="mt-6">
+    <div className={styles.table}>
       <Table
         columns={columns}
         dataSource={data}

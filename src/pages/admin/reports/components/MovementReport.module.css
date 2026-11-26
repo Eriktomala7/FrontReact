@@ -1,0 +1,52 @@
+.controls {
+  display: grid;
+  grid-template-columns: minmax(210px, 1.2fr) minmax(150px, 0.8fr) minmax(180px, 1.2fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.controls :global(.ant-form-item) {
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.controls :global(.ant-form-item-label) {
+  padding-bottom: 4px;
+}
+
+.controls :global(.ant-form-item-label > label) {
+  height: auto;
+  color: #526785;
+  font-size: 11px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.actions :global(.ant-btn:not(.ant-btn-primary)) {
+  border-color: #d3e0f4;
+  color: #314a71;
+}
+
+.table {
+  margin-top: 18px;
+}
+
+.table :global(.ant-table-thead > tr > th) {
+  background: #f6f8fc;
+}
+
+@media (max-width: 1100px) {
+  .controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .controls {
+    grid-template-columns: 1fr;
+  }
+}

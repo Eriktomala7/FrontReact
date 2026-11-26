@@ -7,8 +7,8 @@ import type { ProductoReporte } from '../../../../services/ReportsService';
 import { exportExcelReport, exportPdfReport } from '../exportUtils';
 import styles from './ReportPanel.module.css';
 
-type StockStatus = 'DISPONIBLE' | 'BAJO_STOCK' | 'AGOTADO' | 'INACTIVO';
-type InventoryFilters = { categoria?: string; estado?: string };
+type StockStatus = 'ACTIVO' | 'INACTIVO';
+type InventoryFilters = { categoria?: string; estado?: StockStatus | 'TODOS' };
 
 interface StockRow {
   id: number;
@@ -16,37 +16,29 @@ interface StockRow {
   nombre: string;
   categoria: string;
   cantidad: number;
-  cantidad_minima: number;
   unidad_medida: string;
   estado: StockStatus;
 }
 
 const statusLabels: Record<StockStatus, string> = {
-  DISPONIBLE: 'Disponible',
-  BAJO_STOCK: 'Bajo stock',
-  AGOTADO: 'Agotado',
-  INACTIVO: 'Inactivo',
+  ACTIVO: 'ACTIVO',
+  INACTIVO: 'INACTIVO',
 };
 
 const statusColors: Record<StockStatus, string> = {
-  DISPONIBLE: 'green',
-  BAJO_STOCK: 'gold',
-  AGOTADO: 'red',
+  ACTIVO: 'green',
   INACTIVO: 'default',
 };
 
 type InventoryItem = Omit<ProductoReporte, 'categoria'> & {
   categoria?: string | { nombre?: string } | null;
-  stock_minimo?: number;
 };
 
 const normalize = (item: InventoryItem): StockRow => {
   const cantidad = Number(item.cantidad ?? 0);
-  const minimo = Number(item.cantidad_minima ?? item.stock_minimo ?? 0);
-  let estado: StockStatus = 'DISPONIBLE';
-  if (item.estado && item.estado !== 'ACTIVO' && item.estado !== 'DISPONIBLE') estado = 'INACTIVO';
-  else if (cantidad === 0) estado = 'AGOTADO';
-  else if (cantidad <= minimo) estado = 'BAJO_STOCK';
+  if (item.estado !== 'ACTIVO' && item.estado !== 'INACTIVO') {
+    throw new Error(`Estado de producto inválido: ${item.estado}`);
+  }
 
   return {
     id: item.id,
@@ -54,9 +46,8 @@ const normalize = (item: InventoryItem): StockRow => {
     nombre: item.nombre,
     categoria: typeof item.categoria === 'string' ? item.categoria : item.categoria?.nombre || 'Sin categoría',
     cantidad,
-    cantidad_minima: minimo,
     unidad_medida: item.unidad_medida || 'unidad',
-    estado,
+    estado: item.estado,
   };
 };
 
@@ -84,7 +75,7 @@ const StockReport = () => {
   const [allData, setAllData] = useState<StockRow[]>([]);
   const [data, setData] = useState<StockRow[]>([]);
   const [filters, setFilters] = useState<InventoryFilters>({});
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
 
   const categories = Array.from(new Set(allData.map((item) => item.categoria))).sort();
 
@@ -136,16 +127,15 @@ const StockReport = () => {
       const filterTexts = [
         filters.categoria ? `Categoría: ${filters.categoria}` : undefined,
         filters.estado && filters.estado !== 'TODOS'
-          ? `Estado: ${statusLabels[filters.estado as StockStatus]}`
+          ? `Estado: ${statusLabels[filters.estado]}`
           : undefined,
       ].filter(Boolean) as string[];
 
       const countBy = (estado: StockStatus) => data.filter((item) => item.estado === estado).length;
       const summary = [
         { label: 'Total productos', value: data.length },
-        { label: 'Disponibles', value: countBy('DISPONIBLE') },
-        { label: 'Bajo stock', value: countBy('BAJO_STOCK') },
-        { label: 'Agotados', value: countBy('AGOTADO') },
+        { label: 'Activos', value: countBy('ACTIVO') },
+        { label: 'Inactivos', value: countBy('INACTIVO') },
       ];
       const day = dayjs().format('YYYY-MM-DD');
 
@@ -207,9 +197,7 @@ const StockReport = () => {
       dataIndex: 'cantidad',
       key: 'cantidad',
       render: (value: number, record: StockRow) => (
-        <span className={value <= record.cantidad_minima ? 'text-red-500 font-medium' : ''}>
-          {value} {record.unidad_medida}
-        </span>
+        <span>{value} {record.unidad_medida}</span>
       ),
     },
     {
@@ -226,7 +214,7 @@ const StockReport = () => {
           <h2>Inventario general</h2>
           <div className={styles.actions}>
             <Button icon={<FilterOutlined />} onClick={() => setShowFilters(!showFilters)} aria-expanded={showFilters} aria-controls="inventory-filters">
-              {showFilters ? 'Ocultar filtros' : 'Mostrar filtros'}
+              {showFilters ? 'Ocultar filtros' : 'Filtros'}
             </Button>
             <Button icon={<FilePdfOutlined />} onClick={() => handleExport('pdf')} disabled={loading || data.length === 0}>
               PDF
@@ -250,9 +238,7 @@ const StockReport = () => {
             <Form.Item name="estado" label="Estado">
               <Select>
                 <Select.Option value="TODOS">Todos los estados</Select.Option>
-                <Select.Option value="DISPONIBLE">Disponible</Select.Option>
-                <Select.Option value="BAJO_STOCK">Bajo stock</Select.Option>
-                <Select.Option value="AGOTADO">Agotado</Select.Option>
+                <Select.Option value="ACTIVO">Activo</Select.Option>
                 <Select.Option value="INACTIVO">Inactivo</Select.Option>
               </Select>
             </Form.Item>
