@@ -45,6 +45,7 @@ export const ProductsPage = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [isLoadingCode, setIsLoadingCode] = useState(false);
   
   const [formData, setFormData] = useState<{
     codigo: string;
@@ -233,44 +234,41 @@ export const ProductsPage = () => {
     }
   };
 
-  const getNextProductCode = () => {
-    const existingCodes = products.map(product => product.codigo);
-    const numericCodes = existingCodes
-      .map(code => {
-        const match = code.match(/\d+/g);
-        return match ? Number(match.join('')) : NaN;
-      })
-      .filter(code => !Number.isNaN(code));
+  const getNextProductCode = (productList: Product[]) => {
+    const lastNumber = productList.reduce((highest, product) => {
+      const numbers = String(product.codigo).match(/\d+/g);
+      const number = numbers ? Number(numbers[numbers.length - 1]) : NaN;
+      return Number.isSafeInteger(number) ? Math.max(highest, number) : highest;
+    }, 0);
 
-    let nextNumber = 1;
-    if (numericCodes.length > 0) {
-      nextNumber = Math.max(...numericCodes) + 1;
-    }
-
-    let nextCode = String(nextNumber).padStart(4, '0');
-    while (existingCodes.includes(nextCode)) {
-      nextNumber += 1;
-      nextCode = String(nextNumber).padStart(4, '0');
-    }
-
-    return nextCode;
+    return String(lastNumber + 1).padStart(4, '0');
   };
 
-  const openNewProductModal = () => {
+  const openNewProductModal = async () => {
     console.log('[ProductsPage] openNewProductModal');
     setError(null);
-    setSelectedProduct(null);
-    setPhotoFile(null);
-    setFormData({
-      codigo: getNextProductCode(),
-      nombre: '',
-      descripcion: '',
-      foto_producto: '',
-      id_categoria: categories[0]?.id || 1,
-      cantidad: '',
-      estado: 'ACTIVO'
-    });
-    setIsModalOpen(true);
+    setIsLoadingCode(true);
+    try {
+      const response = await axios.get<Product[]>('https://apicomple-1.onrender.com/productos');
+      setProducts(response.data);
+      setSelectedProduct(null);
+      setPhotoFile(null);
+      setFormData({
+        codigo: getNextProductCode(response.data),
+        nombre: '',
+        descripcion: '',
+        foto_producto: '',
+        id_categoria: categories[0]?.id || 1,
+        cantidad: '',
+        estado: 'ACTIVO'
+      });
+      setIsModalOpen(true);
+    } catch (loadError) {
+      console.error('Error al actualizar los productos para generar el código:', loadError);
+      setError('No se pudo consultar el último código de producto. Inténtalo de nuevo.');
+    } finally {
+      setIsLoadingCode(false);
+    }
   };
 
   const handleCloseModal = () => {
@@ -312,9 +310,9 @@ export const ProductsPage = () => {
             <h1 id="catalog-title">Catálogo de productos</h1>
             <p>Administra los artículos registrados en tu inventario.</p>
           </div>
-          <button className={styles.addButton} onClick={openNewProductModal}>
+          <button className={styles.addButton} onClick={openNewProductModal} disabled={isLoadingCode}>
             <PlusIcon aria-hidden="true" />
-            Nuevo producto
+            {isLoadingCode ? 'Consultando código...' : 'Nuevo producto'}
           </button>
         </header>
 
