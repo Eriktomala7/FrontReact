@@ -1,0 +1,99 @@
+.report {
+  padding: 24px;
+  border: 1px solid #dfe8f6;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(28, 49, 83, 0.035);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.header h2 {
+  margin: 0;
+  color: #101f3b;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.actions :global(.ant-btn) {
+  border-color: #d3e0f4;
+  color: #314a71;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #dfe8f6;
+  border-radius: 7px;
+  background: #f6f8fc;
+}
+
+.filters :global(.ant-form-item) {
+  margin-bottom: 0;
+}
+
+.filters :global(.ant-form-item-label) {
+  padding-bottom: 4px;
+}
+
+.filters :global(.ant-form-item-label > label) {
+  height: auto;
+  color: #526785;
+  font-size: 11px;
+}
+
+.table {
+  margin-top: 16px;
+}
+
+.table :global(.ant-table-thead > tr > th) {
+  background: #f6f8fc;
+}
+
+.table :global(.ant-table-tbody > tr > td:nth-child(2)) {
+  color: #101f3b;
+  font-weight: 700;
+}
+
+.negative {
+  color: #e33d50;
+  font-weight: 700;
+}
+
+.positive {
+  color: #00a978;
+}
+
+.table :global(.ant-tag) {
+  padding: 2px 10px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .report {
+    padding: 16px;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+}

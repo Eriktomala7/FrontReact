@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Button, Form, Row, Col, Table, Select, message, Modal, Card, Space, Typography, Tag } from 'antd';
-import { FilePdfOutlined, FileExcelOutlined, FilterOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Button, Form, Table, Select, message, Tag } from 'antd';
+import { FilePdfOutlined, FileExcelOutlined, FilterOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import ReportsService from '../../../../services/ReportsService';
+import type { ProductoReporte } from '../../../../services/ReportsService';
 import { exportExcelReport, exportPdfReport } from '../exportUtils';
-import './StockReports.css';
-
-const { Title } = Typography;
+import styles from './ReportPanel.module.css';
 
 type StockStatus = 'DISPONIBLE' | 'BAJO_STOCK' | 'AGOTADO' | 'INACTIVO';
+type InventoryFilters = { categoria?: string; estado?: string };
 
 interface StockRow {
   id: number;
@@ -35,7 +35,12 @@ const statusColors: Record<StockStatus, string> = {
   INACTIVO: 'default',
 };
 
-const normalize = (item: any): StockRow => {
+type InventoryItem = Omit<ProductoReporte, 'categoria'> & {
+  categoria?: string | { nombre?: string } | null;
+  stock_minimo?: number;
+};
+
+const normalize = (item: InventoryItem): StockRow => {
   const cantidad = Number(item.cantidad ?? 0);
   const minimo = Number(item.cantidad_minima ?? item.stock_minimo ?? 0);
   let estado: StockStatus = 'DISPONIBLE';
@@ -55,30 +60,38 @@ const normalize = (item: any): StockRow => {
   };
 };
 
+const applyFilters = (rows: StockRow[], values: InventoryFilters) =>
+  rows.filter(
+    (item) =>
+      (!values.categoria || item.categoria === values.categoria) &&
+      (!values.estado || values.estado === 'TODOS' || item.estado === values.estado),
+  );
+
+const fetchInventory = async (): Promise<StockRow[]> => {
+  const response: unknown = await ReportsService.getInventoryReport({});
+  const productos = Array.isArray(response)
+    ? response
+    : response && typeof response === 'object' && 'data' in response && Array.isArray(response.data)
+      ? response.data
+      : null;
+  if (!productos) throw new Error('La respuesta del inventario tiene un formato inválido');
+  return productos.map(normalize);
+};
+
 const StockReport = () => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [allData, setAllData] = useState<StockRow[]>([]);
   const [data, setData] = useState<StockRow[]>([]);
-  const [filters, setFilters] = useState<{ categoria?: string; estado?: string }>({});
-  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+  const [filters, setFilters] = useState<InventoryFilters>({});
+  const [showFilters, setShowFilters] = useState(true);
 
   const categories = Array.from(new Set(allData.map((item) => item.categoria))).sort();
-
-  const applyFilters = (rows: StockRow[], values: { categoria?: string; estado?: string }) =>
-    rows.filter(
-      (item) =>
-        (!values.categoria || item.categoria === values.categoria) &&
-        (!values.estado || values.estado === 'TODOS' || item.estado === values.estado),
-    );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        const response = (await ReportsService.getInventoryReport({})) as any;
-        const productos = Array.isArray(response) ? response : response.data || [];
-        const rows = productos.map(normalize);
+        const rows = await fetchInventory();
         setAllData(rows);
         setData(rows);
       } catch (error) {
@@ -92,18 +105,25 @@ const StockReport = () => {
     fetchData();
   }, []);
 
-  const onFinish = (values: { categoria?: string; estado?: string }) => {
+  const onFinish = (values: InventoryFilters) => {
     const filtered = applyFilters(allData, values);
     setFilters(values);
     setData(filtered);
-    setIsFilterModalVisible(false);
     message.success(`Se encontraron ${filtered.length} registros`);
   };
 
-  const handleReset = () => {
-    form.resetFields();
-    setFilters({});
-    setData(allData);
+  const handleRefresh = async () => {
+    setLoading(true);
+    try {
+      const rows = await fetchInventory();
+      setAllData(rows);
+      setData(applyFilters(rows, filters));
+    } catch (error) {
+      console.error('Error al cargar el inventario:', error);
+      message.error('Error al cargar el inventario');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleExport = (format: 'pdf' | 'excel') => {
@@ -135,13 +155,12 @@ const StockReport = () => {
           title: 'Reporte de inventario',
           filters: filterTexts,
           summary,
-          head: ['Código', 'Producto', 'Categoría', 'Stock', 'Mínimo', 'Unidad', 'Estado'],
+          head: ['Código', 'Producto', 'Categoría', 'Stock', 'Unidad', 'Estado'],
           body: data.map((item) => [
             item.codigo,
             item.nombre,
             item.categoria,
             item.cantidad,
-            item.cantidad_minima,
             item.unidad_medida,
             statusLabels[item.estado],
           ]),
@@ -167,7 +186,6 @@ const StockReport = () => {
             Producto: item.nombre,
             Categoría: item.categoria,
             Stock: item.cantidad,
-            Mínimo: item.cantidad_minima,
             Unidad: item.unidad_medida,
             Estado: statusLabels[item.estado],
           })),
@@ -185,7 +203,7 @@ const StockReport = () => {
     { title: 'Producto', dataIndex: 'nombre', key: 'nombre' },
     { title: 'Categoría', dataIndex: 'categoria', key: 'categoria' },
     {
-      title: 'Stock Actual',
+      title: 'Stock actual',
       dataIndex: 'cantidad',
       key: 'cantidad',
       render: (value: number, record: StockRow) => (
@@ -193,12 +211,6 @@ const StockReport = () => {
           {value} {record.unidad_medida}
         </span>
       ),
-    },
-    {
-      title: 'Mínimo Requerido',
-      dataIndex: 'cantidad_minima',
-      key: 'cantidad_minima',
-      render: (value: number, record: StockRow) => <span>{value} {record.unidad_medida}</span>,
     },
     {
       title: 'Estado',
@@ -209,16 +221,12 @@ const StockReport = () => {
   ];
 
   return (
-    <div className="p-4">
-      <Card>
-        <div className="flex justify-between items-center mb-6">
-          <Title level={4} className="mb-0">Reporte de Inventario</Title>
-          <Space>
-            <Button icon={<FilterOutlined />} onClick={() => setIsFilterModalVisible(true)}>
-              Filtros
-            </Button>
-            <Button icon={<ReloadOutlined />} onClick={handleReset} disabled={loading}>
-              Limpiar
+    <div className={styles.report}>
+        <div className={styles.header}>
+          <h2>Inventario general</h2>
+          <div className={styles.actions}>
+            <Button icon={<FilterOutlined />} onClick={() => setShowFilters(!showFilters)} aria-expanded={showFilters} aria-controls="inventory-filters">
+              {showFilters ? 'Ocultar filtros' : 'Mostrar filtros'}
             </Button>
             <Button icon={<FilePdfOutlined />} onClick={() => handleExport('pdf')} disabled={loading || data.length === 0}>
               PDF
@@ -226,45 +234,33 @@ const StockReport = () => {
             <Button icon={<FileExcelOutlined />} onClick={() => handleExport('excel')} disabled={loading || data.length === 0}>
               Excel
             </Button>
-          </Space>
+            <Button onClick={handleRefresh} loading={loading}>Actualizar</Button>
+          </div>
         </div>
 
-        <Modal
-          title="Filtrar Reporte"
-          open={isFilterModalVisible}
-          onCancel={() => setIsFilterModalVisible(false)}
-          width={600}
-          footer={[
-            <Button key="cancel" onClick={() => setIsFilterModalVisible(false)}>Cancelar</Button>,
-            <Button key="apply" type="primary" onClick={() => form.submit()}>Aplicar Filtros</Button>,
-          ]}
-        >
-          <Form form={form} layout="vertical" onFinish={onFinish} initialValues={{ estado: 'TODOS' }}>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item name="categoria" label="Categoría">
-                  <Select placeholder="Todas las categorías" allowClear>
-                    {categories.map((name) => (
-                      <Select.Option key={name} value={name}>{name}</Select.Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item name="estado" label="Estado">
-                  <Select>
-                    <Select.Option value="TODOS">Todos</Select.Option>
-                    <Select.Option value="DISPONIBLE">Disponible</Select.Option>
-                    <Select.Option value="BAJO_STOCK">Bajo stock</Select.Option>
-                    <Select.Option value="AGOTADO">Agotado</Select.Option>
-                    <Select.Option value="INACTIVO">Inactivo</Select.Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
+        <div id="inventory-filters" hidden={!showFilters}>
+          <Form form={form} layout="vertical" onFinish={onFinish} initialValues={{ estado: 'TODOS' }} className={styles.filters}>
+            <Form.Item name="categoria" label="Categoría">
+              <Select placeholder="Todas las categorías" allowClear>
+                {categories.map((name) => (
+                  <Select.Option key={name} value={name}>{name}</Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item name="estado" label="Estado">
+              <Select>
+                <Select.Option value="TODOS">Todos los estados</Select.Option>
+                <Select.Option value="DISPONIBLE">Disponible</Select.Option>
+                <Select.Option value="BAJO_STOCK">Bajo stock</Select.Option>
+                <Select.Option value="AGOTADO">Agotado</Select.Option>
+                <Select.Option value="INACTIVO">Inactivo</Select.Option>
+              </Select>
+            </Form.Item>
+            <Button type="primary" htmlType="submit" disabled={loading}>Aplicar filtros</Button>
           </Form>
-        </Modal>
+        </div>
 
+        <div className={styles.table}>
         <Table
           columns={columns}
           dataSource={data}
@@ -278,7 +274,7 @@ const StockReport = () => {
           scroll={{ x: true }}
           locale={{ emptyText: 'No hay datos para mostrar con los filtros aplicados' }}
         />
-      </Card>
+        </div>
     </div>
   );
 };

@@ -1,41 +1,26 @@
 import { useState, useEffect } from 'react';
-import { Button, Form, Row, Col, Table, InputNumber, Select, message, Card, Statistic} from 'antd';
-import { AlertOutlined, FilePdfOutlined, FileExcelOutlined } from '@ant-design/icons';
+import { Button, Form, Table, InputNumber, Select, message } from 'antd';
+import { FilterOutlined, FilePdfOutlined, FileExcelOutlined } from '@ant-design/icons';
 import type { LowStockReportParams, ProductoReporte } from '../../../../services/ReportsService';
 import ReportsService from '../../../../services/ReportsService';
 import { useForm } from 'antd/es/form/Form';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { exportExcelReport, exportPdfReport } from '../exportUtils';
+import styles from './ReportPanel.module.css';
+
+interface FilterValues {
+  nivelAlerta?: number | null;
+  idCategoria?: number;
+}
 
 const LowStockReport = () => {
-  const [form] = useForm(); 
-  const [loading, setLoading] = useState(false);
+  const [form] = useForm<FilterValues>();
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ProductoReporte[]>([]);
   const [categories, setCategories] = useState<Array<{ id: number; nombre: string }>>([]);
-  const [stats, setStats] = useState({
-    totalProducts: 0,
-    lowStockCount: 0,
-    outOfStockCount: 0,
-  });
-
-  // Fetch categories on component mount
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get('https://apicomple-1.onrender.com/categorias');
-        const list = Array.isArray(response.data) ? response.data : response.data?.data || [];
-        setCategories(list.map(({ id, nombre }: { id: number; nombre: string }) => ({ id, nombre })));
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        message.error('Error al cargar las categorías');
-      }
-    };
-
-    fetchCategories();
-    // Load initial data
-    onFinish({ nivelAlerta: 10 });
-  }, []);
+  const [showFilters, setShowFilters] = useState(true);
+  const [appliedFilters, setAppliedFilters] = useState<LowStockReportParams>({ nivelAlerta: 0 });
 
   const columns = [
     {
@@ -54,17 +39,15 @@ const LowStockReport = () => {
       key: 'categoria',
     },
     {
-      title: 'Stock Actual',
+      title: 'Stock actual',
       dataIndex: 'cantidad',
       key: 'cantidad',
       render: (value: number, record: ProductoReporte) => (
-        <span className={value === 0 ? 'text-red-600 font-bold' : 'text-orange-600 font-medium'}>
-          {value} {record.unidad_medida}
-        </span>
+        <span>{value} {record.unidad_medida}</span>
       ),
     },
     {
-      title: 'Mínimo Requerido',
+      title: 'Mínimo requerido',
       dataIndex: 'cantidad_minima',
       key: 'cantidad_minima',
       render: (value: number, record: ProductoReporte) => (
@@ -74,39 +57,29 @@ const LowStockReport = () => {
     {
       title: 'Diferencia',
       key: 'diferencia',
-      render: (_: any, record: ProductoReporte) => {
+      render: (_: unknown, record: ProductoReporte) => {
         const diferencia = record.cantidad - record.cantidad_minima;
         return (
-          <span className={diferencia < 0 ? 'text-red-600 font-bold' : 'text-green-600'}>
-            {diferencia < 0 ? 'Faltan ' : 'Sobran '}
-            {Math.abs(diferencia)} {record.unidad_medida}
+          <span className={diferencia < 0 ? styles.negative : styles.positive}>
+            {diferencia}
           </span>
         );
       },
     },
   ];
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: FilterValues) => {
     try {
       setLoading(true);
       
       const params: LowStockReportParams = {
-        nivelAlerta: values.nivelAlerta || 10, // Default to 10 if not provided
+        nivelAlerta: values.nivelAlerta ?? 0,
         idCategoria: values.idCategoria,
       };
 
       const result = await ReportsService.getLowStockReport(params);
       setData(result);
-      
-      // Calculate statistics
-      const lowStockCount = result.length;
-      const outOfStockCount = result.filter(item => item.cantidad === 0).length;
-      
-      setStats({
-        totalProducts: result.length,
-        lowStockCount,
-        outOfStockCount,
-      });
+      setAppliedFilters(params);
       
       message.success(`Se encontraron ${result.length} productos con stock bajo`);
     } catch (error) {
@@ -117,6 +90,33 @@ const LowStockReport = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('https://apicomple-1.onrender.com/categorias');
+        const list = Array.isArray(response.data) ? response.data : response.data?.data || [];
+        setCategories(list.map(({ id, nombre }: { id: number; nombre: string }) => ({ id, nombre })));
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        message.error('Error al cargar las categorías');
+      }
+    };
+
+    const fetchInitialReport = async () => {
+      try {
+        setData(await ReportsService.getLowStockReport({ nivelAlerta: 0 }));
+      } catch (error) {
+        console.error('Error fetching low stock report:', error);
+        message.error('Error al generar el reporte de stock bajo');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+    fetchInitialReport();
+  }, []);
+
   const handleExport = async (format: 'pdf' | 'excel') => {
     try {
       if (data.length === 0) {
@@ -124,16 +124,15 @@ const LowStockReport = () => {
         return;
       }
 
-      const values = form.getFieldsValue();
-      const categoryName = categories.find((c) => c.id === values.idCategoria)?.nombre;
+      const categoryName = categories.find((c) => c.id === appliedFilters.idCategoria)?.nombre;
       const filters = [
-        `Nivel de alerta: ${values.nivelAlerta || 10}`,
+        `Nivel de alerta: ${appliedFilters.nivelAlerta ?? 0}`,
         categoryName ? `Categoría: ${categoryName}` : undefined,
       ].filter(Boolean) as string[];
       const summary = [
-        { label: 'Productos con stock bajo', value: stats.totalProducts },
-        { label: 'Agotados', value: stats.outOfStockCount },
-        { label: 'Por agotarse', value: stats.lowStockCount - stats.outOfStockCount },
+        { label: 'Productos con stock bajo', value: data.length },
+        { label: 'Agotados', value: data.filter(item => item.cantidad === 0).length },
+        { label: 'Por agotarse', value: data.filter(item => item.cantidad !== 0).length },
       ];
       const day = dayjs().format('YYYY-MM-DD');
 
@@ -147,7 +146,7 @@ const LowStockReport = () => {
           body: data.map((item) => [
             item.codigo,
             item.nombre,
-            (item as any).categoria || '',
+            item.categoria || '',
             item.cantidad,
             item.cantidad_minima,
             item.unidad_medida,
@@ -174,7 +173,7 @@ const LowStockReport = () => {
             rows: data.map((item) => ({
               Código: item.codigo,
               Producto: item.nombre,
-              Categoría: (item as any).categoria || '',
+              Categoría: item.categoria || '',
               Stock: item.cantidad,
               Mínimo: item.cantidad_minima,
               Unidad: item.unidad_medida,
@@ -194,116 +193,64 @@ const LowStockReport = () => {
   };
 
   return (
-    <div className="p-4">
-      <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <Statistic
-            title="Productos con Stock Bajo"
-            value={stats.totalProducts}
-            valueStyle={{ color: stats.totalProducts > 0 ? '#f59e0b' : '#10b981' }}
-            prefix={<AlertOutlined />}
-          />
-        </Card>
-        <Card>
-          <Statistic
-            title="Productos Agotados"
-            value={stats.outOfStockCount}
-            valueStyle={{ color: stats.outOfStockCount > 0 ? '#ef4444' : '#10b981' }}
-          />
-        </Card>
-        <Card>
-          <Statistic
-            title="Productos por Agotarse"
-            value={stats.lowStockCount - stats.outOfStockCount}
-            valueStyle={{ color: '#f59e0b' }}
-          />
-        </Card>
+    <div className={styles.report}>
+      <div className={styles.header}>
+        <h2>Stock mínimo</h2>
+        <div className={styles.actions}>
+          <Button icon={<FilterOutlined />} onClick={() => setShowFilters(!showFilters)} aria-expanded={showFilters} aria-controls="low-stock-filters">
+            {showFilters ? 'Ocultar filtros' : 'Mostrar filtros'}
+          </Button>
+          <Button icon={<FilePdfOutlined />} onClick={() => handleExport('pdf')} disabled={loading || data.length === 0}>
+            PDF
+          </Button>
+          <Button icon={<FileExcelOutlined />} onClick={() => handleExport('excel')} disabled={loading || data.length === 0}>
+            Excel
+          </Button>
+          <Button onClick={() => onFinish(appliedFilters)} loading={loading}>
+            Actualizar
+          </Button>
+        </div>
       </div>
 
-      <div className="bg-white p-4 rounded-lg shadow">
+      <div id="low-stock-filters" hidden={!showFilters}>
         <Form
           form={form}
           layout="vertical"
           onFinish={onFinish}
-          initialValues={{
-            nivelAlerta: 10,
-          }}
+          initialValues={{ nivelAlerta: 0 }}
+          className={styles.filters}
         >
-          <Row gutter={16}>
-            <Col xs={24} md={8} lg={4}>
-              <Form.Item
-                name="nivelAlerta"
-                label="Nivel de Alerta"
-                tooltip="Número de unidades por debajo del cual se considera stock bajo"
-              >
-                <InputNumber
-                  min={1}
-                  className="w-full"
-                  placeholder="Ej: 10"
-                />
-              </Form.Item>
-            </Col>
-            
-            <Col xs={24} md={8} lg={4}>
-              <Form.Item name="idCategoria" label="Categoría">
-                <Select
-                  placeholder="Todas las categorías"
-                  allowClear
-                  options={categories.map(cat => ({
-                    value: cat.id,
-                    label: cat.nombre,
-                  }))}
-                />
-              </Form.Item>
-            </Col>
-            
-            <Col xs={24} md={8} lg={16} className="flex items-end space-x-2">
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={loading}
-                icon={<AlertOutlined />}
-              >
-                Ver Stock Bajo
-              </Button>
-              
-              <Button
-                icon={<FilePdfOutlined />}
-                onClick={() => handleExport('pdf')}
-                disabled={loading || data.length === 0}
-              >
-                Exportar PDF
-              </Button>
-              
-              <Button
-                icon={<FileExcelOutlined />}
-                onClick={() => handleExport('excel')}
-                disabled={loading || data.length === 0}
-              >
-                Exportar Excel
-              </Button>
-            </Col>
-          </Row>
+          <Form.Item name="idCategoria" label="Categoría">
+            <Select
+              placeholder="Todas las categorías"
+              allowClear
+              options={categories.map(cat => ({ value: cat.id, label: cat.nombre }))}
+            />
+          </Form.Item>
+          <Form.Item name="nivelAlerta" label="Nivel de alerta">
+            <InputNumber min={0} style={{ width: '100%' }} />
+          </Form.Item>
+          <Button type="primary" htmlType="submit" loading={loading}>Aplicar filtros</Button>
         </Form>
+      </div>
 
-        <div className="mt-6">
+        <div className={styles.table}>
           <Table
             columns={columns}
             dataSource={data}
             loading={loading}
             rowKey="id"
-            pagination={{ 
+            pagination={data.length > 10 ? {
               pageSize: 10,
               showSizeChanger: true,
               showTotal: (total) => `Total: ${total} productos con stock bajo`
-            }}
+            } : false}
             scroll={{ x: true }}
             locale={{
               emptyText: 'No hay productos con stock bajo para los filtros seleccionados'
             }}
           />
         </div>
-      </div>
     </div>
   );
 };
