@@ -44,7 +44,8 @@ export const ProductsPage = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const photoPreview = photoFile ? photoUrl : selectedProduct?.foto_producto || null;
   const [isLoadingCode, setIsLoadingCode] = useState(false);
   
   const [formData, setFormData] = useState<{
@@ -79,37 +80,31 @@ export const ProductsPage = () => {
     }
   };
 
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get('https://apicomple-1.onrender.com/categorias');
-      setCategories(response.data);
-      // Set default category if none selected
-      if (response.data.length > 0 && !formData.id_categoria) {
-        setFormData(prev => ({
-          ...prev,
-          id_categoria: response.data[0].id
-        }));
-      }
-    } catch (err) {
-      console.error('Error al cargar categorías:', err);
-    }
-  };
-
   useEffect(() => {
-    fetchProducts();
-    fetchCategories();
+    let active = true;
+    axios.get<Product[]>('https://apicomple-1.onrender.com/productos')
+      .then((response) => { if (active) setProducts(response.data); })
+      .catch((err: unknown) => {
+        console.error('Error al cargar productos:', err);
+        if (active) setError('Error al cargar los productos. Por favor, inténtalo de nuevo.');
+      })
+      .finally(() => { if (active) setLoading(false); });
+    axios.get<Category[]>('https://apicomple-1.onrender.com/categorias')
+      .then((response) => {
+        if (active) {
+          setCategories(response.data);
+          setFormData((previous) => !previous.id_categoria && response.data.length > 0
+            ? { ...previous, id_categoria: response.data[0].id }
+            : previous);
+        }
+      })
+      .catch((err: unknown) => console.error('Error al cargar categorías:', err));
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
-    if (!photoFile) {
-      setPhotoPreview(selectedProduct?.foto_producto || null);
-      return;
-    }
-
-    const previewUrl = URL.createObjectURL(photoFile);
-    setPhotoPreview(previewUrl);
-    return () => URL.revokeObjectURL(previewUrl);
-  }, [photoFile, selectedProduct]);
+    return () => { if (photoUrl) URL.revokeObjectURL(photoUrl); };
+  }, [photoUrl]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -122,21 +117,25 @@ export const ProductsPage = () => {
   };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhotoFile(e.target.files?.[0] || null);
+    const file = e.target.files?.[0] || null;
+    setPhotoFile(file);
+    setPhotoUrl(file ? URL.createObjectURL(file) : null);
   };
 
   const parseErrorMessage = (error: unknown) => {
     if (axios.isAxiosError(error)) {
-      const responseData = error.response?.data as any;
+      const responseData: unknown = error.response?.data;
       if (responseData) {
-        const message = responseData.message ?? responseData.error ?? responseData;
+        const message = typeof responseData === 'object'
+          ? ('message' in responseData ? responseData.message : 'error' in responseData ? responseData.error : responseData)
+          : responseData;
         if (Array.isArray(message)) {
           return message.join(', ');
         }
         if (typeof message === 'string') {
           return message;
         }
-        if (message && typeof message === 'object' && typeof message.message === 'string') {
+        if (message && typeof message === 'object' && 'message' in message && typeof message.message === 'string') {
           return message.message;
         }
       }
@@ -210,6 +209,7 @@ export const ProductsPage = () => {
       estado: product.estado
     });
     setPhotoFile(null);
+    setPhotoUrl(null);
     setIsModalOpen(true);
   };
 
@@ -253,6 +253,7 @@ export const ProductsPage = () => {
       setProducts(response.data);
       setSelectedProduct(null);
       setPhotoFile(null);
+      setPhotoUrl(null);
       setFormData({
         codigo: getNextProductCode(response.data),
         nombre: '',
@@ -275,6 +276,7 @@ export const ProductsPage = () => {
     setIsModalOpen(false);
     setSelectedProduct(null);
     setPhotoFile(null);
+    setPhotoUrl(null);
     setFormData({
       codigo: '',
       nombre: '',

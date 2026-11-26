@@ -65,7 +65,15 @@ export const MovementsPage = () => {
   };
 
   useEffect(() => {
-    fetchMovimientos();
+    let active = true;
+    axios.get<Movimiento[]>('https://apicomple-1.onrender.com/movimientos')
+      .then((response) => { if (active) setMovimientos(response.data); })
+      .catch((err: unknown) => {
+        console.error('Error al cargar movimientos:', err);
+        if (active) setError('Error al cargar el historial de movimientos');
+      })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
   }, []);
 
   const openAdjustment = (movement: Movimiento) => {

@@ -91,15 +91,14 @@ export const login = async (email: string, password: string): Promise<LoginRespo
         rol: userRole
       }
     };
-  } catch (error: any) {
+  } catch (error) {
     console.error('Login error:', {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
+      message: error instanceof Error ? error.message : String(error),
+      response: axios.isAxiosError(error) ? error.response?.data : undefined,
+      status: axios.isAxiosError(error) ? error.response?.status : undefined,
       config: {
-        url: error.config?.url,
-        method: error.config?.method,
-        data: error.config?.data
+        url: axios.isAxiosError(error) ? error.config?.url : undefined,
+        method: axios.isAxiosError(error) ? error.config?.method : undefined,
       }
     });
     throw error;

@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { createRequest, getProducts } from '../services/dashboardService';
+import { getErrorMessage } from '../services/errorMessage';
 import type { Product } from '../services/dashboardService';
 import styles from '../styles/RequestModal.module.css';
 
@@ -10,9 +11,9 @@ interface NewRequestModalProps {
   onCreated: () => void | Promise<void>;
 }
 
-const NewRequestModal = ({ isOpen, onClose, onCreated }: NewRequestModalProps) => {
+const NewRequestModalContent = ({ onClose, onCreated }: Omit<NewRequestModalProps, 'isOpen'>) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [loadingProducts, setLoadingProducts] = useState(false);
+  const [loadingProducts, setLoadingProducts] = useState(true);
   const [productId, setProductId] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [comentario, setComentario] = useState('');
@@ -20,19 +21,18 @@ const NewRequestModal = ({ isOpen, onClose, onCreated }: NewRequestModalProps) =
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!isOpen) return;
-    setProductId(0);
-    setQuantity(1);
-    setComentario('');
-    setError(null);
-    setLoadingProducts(true);
+    let active = true;
     getProducts()
-      .then((data) => setProducts((Array.isArray(data) ? data : []).filter((p) => p.cantidad > 0)))
-      .catch(() => setError('Error al cargar los productos'))
-      .finally(() => setLoadingProducts(false));
-  }, [isOpen]);
-
-  if (!isOpen) return null;
+      .then((data) => {
+        if (active) setProducts((Array.isArray(data) ? data : []).filter((p) => p.cantidad > 0));
+      })
+      .catch((loadError: unknown) => {
+        console.error('Error al cargar los productos:', loadError);
+        if (active) setError('Error al cargar los productos');
+      })
+      .finally(() => { if (active) setLoadingProducts(false); });
+    return () => { active = false; };
+  }, []);
 
   const selected = products.find((p) => p.id === productId) ?? null;
   const invalidQuantity =
@@ -62,8 +62,8 @@ const NewRequestModal = ({ isOpen, onClose, onCreated }: NewRequestModalProps) =
       });
       await onCreated();
       onClose();
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'No se pudo crear la solicitud');
+    } catch (err) {
+      setError(getErrorMessage(err, 'No se pudo crear la solicitud'));
     } finally {
       setIsSubmitting(false);
     }
@@ -182,5 +182,8 @@ const NewRequestModal = ({ isOpen, onClose, onCreated }: NewRequestModalProps) =
     </div>
   );
 };
+
+const NewRequestModal = ({ isOpen, ...props }: NewRequestModalProps) =>
+  isOpen ? <NewRequestModalContent {...props} /> : null;
 
 export default NewRequestModal;

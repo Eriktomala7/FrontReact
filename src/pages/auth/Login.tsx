@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRightIcon, CubeIcon } from '@heroicons/react/24/outline';
 import { login } from '../../services/authService';
+import { getErrorMessage } from '../../services/errorMessage';
 import './Login.css';
 
 interface UserData {
@@ -15,16 +16,17 @@ interface LoginProps {
 const Login = ({ onLogin }: LoginProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
+  const isUnauthorized = location.state?.unauthorized;
+  const [error, setError] = useState(
+    isUnauthorized ? 'No tienes permiso para acceder a esa página. Por favor inicia sesión.' : '',
+  );
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const from = location.state?.from || '/';
-  const isUnauthorized = location.state?.unauthorized;
 
   useEffect(() => {
     if (isUnauthorized) {
-      setError('No tienes permiso para acceder a esa página. Por favor inicia sesión.');
       window.history.replaceState({}, document.title);
     }
   }, [isUnauthorized]);
@@ -43,8 +45,8 @@ const Login = ({ onLogin }: LoginProps) => {
 
       onLogin({ rol: userRole });
       navigate(from, { replace: true });
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'Error al iniciar sesión. Verifica tus credenciales.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Error al iniciar sesión. Verifica tus credenciales.'));
     } finally {
       setIsLoading(false);
     }

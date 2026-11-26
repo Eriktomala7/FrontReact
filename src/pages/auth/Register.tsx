@@ -2,6 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRightIcon, CubeIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { register } from '../../services/authService';
+import { getErrorMessage } from '../../services/errorMessage';
 import './Login.css';
 
 interface RegisterProps {
@@ -67,9 +68,8 @@ const Register = ({ onRegister }: RegisterProps) => {
         onRegister({ rol: response.user.rol as 'ADMIN' | 'USUARIO' });
       }
       navigate('/login', { replace: true });
-    } catch (err: any) {
-      const message = err.response?.data?.message;
-      setError(Array.isArray(message) ? message.join('. ') : message || 'No se pudo crear la cuenta. Inténtalo de nuevo.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'No se pudo crear la cuenta. Inténtalo de nuevo.'));
     } finally {
       setIsLoading(false);
     }

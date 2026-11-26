@@ -9,6 +9,22 @@ import AdminDashboard from './routes/AdminDashboard';
 import { getCurrentUser } from './services/authService';
 import './App.css';
 
+const ProtectedRoute = ({ children, requiredRole, isAuthenticated, userRole }: {
+  children: React.ReactNode;
+  requiredRole?: 'ADMIN' | 'USUARIO';
+  isAuthenticated: boolean;
+  userRole: 'ADMIN' | 'USUARIO' | null;
+}) => {
+  const location = useLocation();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+  if (requiredRole && userRole !== requiredRole) {
+    return <Navigate to="/not-authorized" replace />;
+  }
+  return <>{children}</>;
+};
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<'ADMIN' | 'USUARIO' | null>(null);
@@ -42,19 +58,6 @@ function App() {
     return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
   }
 
-  // Protected route component
-  const ProtectedRoute = ({ children, requiredRole }: { children: React.ReactNode, requiredRole?: 'ADMIN' | 'USUARIO' }) => {
-    if (!isAuthenticated) {
-      return <Navigate to="/login" state={{ from: location }} replace />;
-    }
-    
-    if (requiredRole && userRole !== requiredRole) {
-      return <Navigate to="/not-authorized" replace />;
-    }
-    
-    return <>{children}</>;
-  };
-
   // Main app content
   return (
     <div className="app">
@@ -67,6 +70,7 @@ function App() {
               <Navigate to={userRole === 'ADMIN' ? '/admin' : '/dashboard'} replace />
             ) : (
               <Login
+                key={location.key}
                 onLogin={(userData) => {
                   setIsAuthenticated(true);
                   setUserRole(userData.rol);
@@ -96,7 +100,7 @@ function App() {
         <Route
           path="/dashboard/*"
           element={
-            <ProtectedRoute requiredRole="USUARIO">
+            <ProtectedRoute requiredRole="USUARIO" isAuthenticated={isAuthenticated} userRole={userRole}>
               <UserRoutes />
             </ProtectedRoute>
           }
@@ -106,7 +110,7 @@ function App() {
         <Route
           path="/admin/*"
           element={
-            <ProtectedRoute requiredRole="ADMIN">
+            <ProtectedRoute requiredRole="ADMIN" isAuthenticated={isAuthenticated} userRole={userRole}>
               <AdminDashboard />
             </ProtectedRoute>
           }

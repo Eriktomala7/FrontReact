@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon, CubeIcon } from '@heroicons/react/24/outline';
 import { requestPasswordReset } from '../../services/authService';
+import { getErrorMessage } from '../../services/errorMessage';
 import './Login.css';
 
 const ForgotPassword = () => {
@@ -19,8 +20,8 @@ const ForgotPassword = () => {
     try {
       await requestPasswordReset(email);
       setSuccess('Si el correo está registrado, recibirás instrucciones para recuperar tu contraseña.');
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'No se pudo procesar la solicitud. Inténtalo de nuevo.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'No se pudo procesar la solicitud. Inténtalo de nuevo.'));
     } finally {
       setIsLoading(false);
     }

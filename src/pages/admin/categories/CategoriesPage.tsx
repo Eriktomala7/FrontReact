@@ -38,7 +38,15 @@ export const CategoriesPage = () => {
   };
 
   useEffect(() => {
-    fetchCategories();
+    let active = true;
+    axios.get<Category[]>('https://apicomple-1.onrender.com/categorias')
+      .then((response) => { if (active) setCategories(response.data); })
+      .catch((err: unknown) => {
+        console.error('Error al cargar categorías:', err);
+        if (active) setError('Error al cargar las categorías. Por favor, inténtalo de nuevo.');
+      })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

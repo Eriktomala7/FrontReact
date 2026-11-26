@@ -24,10 +24,3 @@ const UserRoutes = () => {
 };
 
 export default UserRoutes;
-
-export const userRoutes = [
-  {
-    path: '/*',
-    element: <UserRoutes />
-  }
-];

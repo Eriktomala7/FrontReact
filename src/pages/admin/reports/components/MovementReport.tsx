@@ -3,6 +3,7 @@ import { Button, DatePicker, Form, Table, Select, message } from 'antd';
 import { SearchOutlined, FilePdfOutlined, FileExcelOutlined, ReloadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import moment from 'moment';
+import type { Moment } from 'moment';
 import type { MovementReportParams, MovimientoReporte } from '../../../../services/ReportsService';
 import ReportsService from '../../../../services/ReportsService';
 import { useForm } from 'antd/es/form/Form';
@@ -20,26 +21,40 @@ const movementTypes = [
   { value: 'AJUSTE', label: 'Ajustes' },
 ];
 
+interface MovementFormValues {
+  dateRange?: [Moment | null, Moment | null];
+  tipo?: string;
+  idProducto?: number;
+}
+
 const MovementReport = () => {
-  const [form] = useForm();
-  const [loading, setLoading] = useState(false);
+  const [form] = useForm<MovementFormValues>();
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<MovimientoReporte[]>([]);
   const [products, setProducts] = useState<Array<{ id: number; nombre: string }>>([]);
 
   // Fetch products on component mount
   useEffect(() => {
-    loadMovements();
+    let active = true;
+    ReportsService.getMovementReport()
+      .then((movimientos) => { if (active) setData(movimientos); })
+      .catch((error: unknown) => {
+        console.error('Error al cargar movimientos:', error);
+        if (active) message.error('Error al cargar los movimientos');
+      })
+      .finally(() => { if (active) setLoading(false); });
     const fetchProducts = async () => {
       try {
         const result = await getProducts();
-        setProducts(result.map(({ id, nombre }) => ({ id, nombre })));
+        if (active) setProducts(result.map(({ id, nombre }) => ({ id, nombre })));
       } catch (error) {
         console.error('Error fetching products:', error);
-        message.error('Error al cargar los productos');
+        if (active) message.error('Error al cargar los productos');
       }
     };
 
-    fetchProducts();
+    void fetchProducts();
+    return () => { active = false; };
   }, []);
 
   const columns = [
@@ -66,7 +81,7 @@ const MovementReport = () => {
     {
       title: 'Producto',
       key: 'producto',
-      render: (_: any, record: MovimientoReporte) => (
+      render: (_: unknown, record: MovimientoReporte) => (
         <div>
           <div className="font-medium">{record.producto.nombre}</div>
           <div className="text-gray-500 text-xs">Código: {record.producto.codigo}</div>
@@ -86,7 +101,7 @@ const MovementReport = () => {
     {
       title: 'Usuario',
       key: 'usuario',
-      render: (_: any, record: MovimientoReporte) => (
+      render: (_: unknown, record: MovimientoReporte) => (
         <div>
           <div>{record.usuario.nombre}</div>
           <div className="text-gray-500 text-xs">{record.usuario.email}</div>
@@ -95,14 +110,14 @@ const MovementReport = () => {
     },
   ];
 
-  const getMovementParams = (values: any): MovementReportParams => ({
+  const getMovementParams = (values: MovementFormValues): MovementReportParams => ({
     fechaInicio: values.dateRange?.[0]?.startOf('day').format('YYYY-MM-DD HH:mm:ss'),
     fechaFin: values.dateRange?.[1]?.endOf('day').format('YYYY-MM-DD HH:mm:ss'),
     tipoMovimiento: values.tipo === 'TODOS' ? undefined : values.tipo,
     idProducto: values.idProducto ? Number(values.idProducto) : undefined,
   });
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: MovementFormValues) => {
     try {
       setLoading(true);
 
@@ -113,8 +128,8 @@ const MovementReport = () => {
         if (values.idProducto && String(movement.id_producto) !== String(values.idProducto)) return false;
 
         const movementDate = dayjs(movement.fecha);
-        if (startDate && movementDate.isBefore(startDate.startOf('day'))) return false;
-        if (endDate && movementDate.isAfter(endDate.endOf('day'))) return false;
+        if (startDate && movementDate.isBefore(startDate.clone().startOf('day').toDate())) return false;
+        if (endDate && movementDate.isAfter(endDate.clone().endOf('day').toDate())) return false;
         return true;
       });
 

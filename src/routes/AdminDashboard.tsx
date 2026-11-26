@@ -28,10 +28,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-
-export const adminRoutes = [
-  {
-    path: 'admin',
-    element: <AdminDashboard />
-  }
-];

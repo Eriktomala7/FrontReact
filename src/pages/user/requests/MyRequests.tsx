@@ -74,7 +74,15 @@ const MyRequests = () => {
   };
 
   useEffect(() => {
-    fetchRequests();
+    let active = true;
+    getMyRequests()
+      .then((data) => { if (active) setRequests(Array.isArray(data) ? data : []); })
+      .catch((err: unknown) => {
+        console.error('Error al cargar solicitudes:', err);
+        if (active) setError('Error al cargar las solicitudes. Por favor, inténtalo de nuevo.');
+      })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
   }, []);
 
   const formatDate = (dateString: string) => {

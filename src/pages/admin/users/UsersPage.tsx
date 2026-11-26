@@ -39,7 +39,20 @@ export const UsersPage = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
+    let active = true;
+    axios.get<User[]>('https://apicomple-1.onrender.com/usuarios')
+      .then((response) => {
+        if (active) {
+          setUsers(response.data);
+          setError(null);
+        }
+      })
+      .catch((fetchError: unknown) => {
+        console.error('Error al cargar usuarios:', fetchError);
+        if (active) setError('Error al cargar los usuarios. Por favor, inténtalo de nuevo.');
+      })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
   }, []);
 
   const closeModal = () => {
@@ -221,7 +234,7 @@ export const UsersPage = () => {
                 </button>
               </header>
               {error && isModalOpen && <div className={styles.modalError} role="alert">{error}</div>}
-              <UserForm user={selectedUser} onSave={handleSave} onCancel={closeModal} isSaving={isSaving} />
+              <UserForm key={selectedUser?.id ?? 'new'} user={selectedUser} onSave={handleSave} onCancel={closeModal} isSaving={isSaving} />
             </Dialog.Panel>
           </div>
         </div>

@@ -34,6 +34,16 @@ export interface Solicitud {
   producto: Producto;
 }
 
+const loadSolicitudes = async (): Promise<Solicitud[]> => {
+  const response = await axios.get<Solicitud[]>('https://apicomple-1.onrender.com/solicitudes');
+  return response.data;
+};
+
+const loadProductos = async (): Promise<Producto[]> => {
+  const response = await axios.get<Producto[]>('https://apicomple-1.onrender.com/productos');
+  return response.data;
+};
+
 const RequestsPage = () => {
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
   const [productos, setProductos] = useState<Producto[]>([]);
@@ -53,8 +63,7 @@ const RequestsPage = () => {
 
   const fetchSolicitudes = async () => {
     try {
-      const response = await axios.get('https://apicomple-1.onrender.com/solicitudes');
-      setSolicitudes(response.data);
+      setSolicitudes(await loadSolicitudes());
       setError(null);
     } catch (fetchError) {
       console.error('Error al cargar solicitudes:', fetchError);
@@ -64,18 +73,45 @@ const RequestsPage = () => {
     }
   };
 
-  const fetchProductos = async () => {
-    try {
-      const response = await axios.get('https://apicomple-1.onrender.com/productos');
-      setProductos(response.data);
-    } catch (fetchError) {
-      console.error('Error al cargar productos:', fetchError);
-    }
-  };
-
   useEffect(() => {
-    fetchSolicitudes();
-    fetchProductos();
+    let isActive = true;
+
+    const loadInitialSolicitudes = async () => {
+      try {
+        const initialSolicitudes = await loadSolicitudes();
+        if (isActive) {
+          setSolicitudes(initialSolicitudes);
+          setError(null);
+        }
+      } catch (fetchError) {
+        console.error('Error al cargar solicitudes:', fetchError);
+        if (isActive) {
+          setError('Error al cargar las solicitudes. Por favor, inténtalo de nuevo.');
+        }
+      } finally {
+        if (isActive) {
+          setLoading(false);
+        }
+      }
+    };
+
+    const loadInitialProductos = async () => {
+      try {
+        const initialProductos = await loadProductos();
+        if (isActive) {
+          setProductos(initialProductos);
+        }
+      } catch (fetchError) {
+        console.error('Error al cargar productos:', fetchError);
+      }
+    };
+
+    void loadInitialSolicitudes();
+    void loadInitialProductos();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   const filteredSolicitudes = solicitudes.filter((solicitud) =>

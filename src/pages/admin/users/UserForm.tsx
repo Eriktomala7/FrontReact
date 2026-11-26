@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { User } from './UsersPage';
 import styles from './UsersPage.module.css';
 
@@ -12,24 +12,11 @@ interface UserFormProps {
 
 export const UserForm: React.FC<UserFormProps> = ({ user, onSave, onCancel, isSaving }) => {
   const [formData, setFormData] = useState<Partial<User>>({
-    nombre: '',
-    email: '',
-    rol: 'USUARIO',
-    estado: 'ACTIVO'
+    nombre: user?.nombre || '',
+    email: user?.email || '',
+    rol: user?.rol || 'USUARIO',
+    estado: user?.estado || 'ACTIVO'
   });
-
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        nombre: user.nombre || '',
-        email: user.email || '',
-        rol: user.rol || 'USUARIO',
-        estado: user.estado || 'ACTIVO'
-      });
-    } else {
-      setFormData({ nombre: '', email: '', rol: 'USUARIO', estado: 'ACTIVO' });
-    }
-  }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

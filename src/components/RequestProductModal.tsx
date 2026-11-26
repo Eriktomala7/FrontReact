@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { XMarkIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import styles from '../styles/RequestModal.module.css';
 
@@ -17,8 +17,7 @@ interface RequestProductModalProps {
   onRequest: (data: { cantidad: number; comentario: string }) => void | Promise<void>;
 }
 
-const RequestProductModal: React.FC<RequestProductModalProps> = ({
-  isOpen,
+const RequestProductModalContent: React.FC<Omit<RequestProductModalProps, 'isOpen'>> = ({
   onClose,
   product,
   onRequest,
@@ -28,15 +27,6 @@ const RequestProductModal: React.FC<RequestProductModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      setQuantity(1);
-      setError(null);
-      setComentario('Solicitud de material');
-      setIsSubmitted(false);
-    }
-  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,8 +51,6 @@ const RequestProductModal: React.FC<RequestProductModalProps> = ({
       setIsSubmitting(false);
     }
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className={styles.modalOverlay} onClick={() => !isSubmitting && onClose()}>
@@ -166,5 +154,8 @@ const RequestProductModal: React.FC<RequestProductModalProps> = ({
     </div>
   );
 };
+
+const RequestProductModal: React.FC<RequestProductModalProps> = ({ isOpen, ...props }) =>
+  isOpen ? <RequestProductModalContent {...props} /> : null;
 
 export default RequestProductModal;

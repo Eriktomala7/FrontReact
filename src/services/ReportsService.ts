@@ -82,6 +82,24 @@ export interface MovimientoReporte {
   usuario: UsuarioMovimiento;
 }
 
+type MovimientoResponse = Omit<MovimientoReporte, 'producto' | 'usuario'> & {
+  producto?: Partial<ProductoMovimiento> | null;
+  usuario?: Partial<UsuarioMovimiento> | null;
+};
+
+type LowStockResponse = Omit<ProductoReporte, 'categoria'> & {
+  categoria?: string | { nombre: string } | null;
+  stock_minimo?: number;
+};
+
+function extractItems<T>(data: T[] | Record<string, T[]>): T[] {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.data)) return data.data;
+  return data && typeof data === 'object'
+    ? Object.values(data).find(Array.isArray) ?? []
+    : [];
+}
+
 // Helper to extract readable error from blob responses
 async function extractBlobError(err: unknown): Promise<never> {
   if (axios.isAxiosError(err)) {
@@ -128,7 +146,7 @@ const ReportsService = {
   async getMovementReport(params: MovementReportParams = {}): Promise<MovimientoReporte[]> {
     try {
       // Preparar los parámetros de consulta
-      const queryParams: Record<string, any> = {};
+      const queryParams: Record<string, string | number> = {};
       
       // Mapear los parámetros a los nombres que espera la API
       if (params.fechaInicio) queryParams.fechaInicio = params.fechaInicio;
@@ -139,33 +157,14 @@ const ReportsService = {
       if (params.idProducto) queryParams.id_producto = params.idProducto;
   
       // Realizar la petición
-      const response = await axios.get(`${API_URL}/reportes/movimientos`, { 
+      const response = await axios.get<MovimientoResponse[] | Record<string, MovimientoResponse[]>>(`${API_URL}/reportes/movimientos`, {
         params: queryParams 
       });
   
-      // Manejar diferentes formatos de respuesta
-      let movimientos: any[] = [];
-      
-      // Caso 1: La respuesta tiene un array en la propiedad 'data'
-      if (response.data && Array.isArray(response.data.data)) {
-        movimientos = response.data.data;
-      } 
-      // Caso 2: La respuesta es directamente el array
-      else if (Array.isArray(response.data)) {
-        movimientos = response.data;
-      }
-      // Caso 3: La respuesta es un objeto con un array en alguna propiedad
-      else if (response.data && typeof response.data === 'object') {
-        const dataKey = Object.keys(response.data).find(key => 
-          Array.isArray(response.data[key])
-        );
-        if (dataKey) {
-          movimientos = response.data[dataKey];
-        }
-      }
+      const movimientos = extractItems(response.data);
   
       // Mapear los datos al formato esperado por la interfaz
-      return movimientos.map((mov: any) => ({
+      return movimientos.map((mov) => ({
         id: mov.id,
         id_producto: mov.id_producto,
         tipo: mov.tipo,
@@ -223,23 +222,11 @@ const ReportsService = {
   // Get low stock report
   async getLowStockReport(params: LowStockReportParams = {}): Promise<ProductoReporte[]> {
     try {
-      const response = await axios.get(`${API_URL}/reportes/bajo-stock`, { params });
-
-      // Normalizar respuesta: puede venir como { success, data: [...] } o directamente como array
-      let items: any[] = [];
-      if (response.data && Array.isArray(response.data.data)) {
-        items = response.data.data;
-      } else if (Array.isArray(response.data)) {
-        items = response.data;
-      } else if (response.data && typeof response.data === 'object') {
-        const key = Object.keys(response.data).find(k => 
-          Array.isArray(response.data[k])
-        );
-        if (key) items = response.data[key];
-      }
+      const response = await axios.get<LowStockResponse[] | Record<string, LowStockResponse[]>>(`${API_URL}/reportes/bajo-stock`, { params });
+      const items = extractItems(response.data);
 
       // Mapear al tipo ProductoReporte esperado por el front
-      const mapped: ProductoReporte[] = items.map((item: any) => ({
+      const mapped: ProductoReporte[] = items.map((item) => ({
         id: item.id,
         codigo: item.codigo,
         nombre: item.nombre,
@@ -247,7 +234,9 @@ const ReportsService = {
         cantidad: item.cantidad ?? 0,
         cantidad_minima: item.cantidad_minima ?? item.stock_minimo ?? 0,
         unidad_medida: item.unidad_medida ?? 'unidad',
-        categoria: item.categoria?.nombre ?? item.categoria ?? 'Sin categoría',
+        categoria: typeof item.categoria === 'object'
+          ? item.categoria?.nombre ?? 'Sin categoría'
+          : item.categoria ?? 'Sin categoría',
         estado: item.estado ?? 'ACTIVO',
         fecha_creacion: item.fecha_creacion ?? '',
         fecha_actualizacion: item.fecha_actualizacion ?? '',
@@ -261,7 +250,7 @@ const ReportsService = {
   },
 
   // Export report to PDF
-  async exportToPDF(reportType: 'inventario' | 'movimientos' | 'bajo-stock', params: any = {}): Promise<Blob> {
+  async exportToPDF(reportType: 'inventario' | 'movimientos' | 'bajo-stock', params: InventoryReportParams | MovementReportParams | LowStockReportParams = {}): Promise<Blob> {
     try {
       const response = await axios.get(`${API_URL}/reportes/export/${reportType}/pdf`, {
         params,
@@ -288,7 +277,7 @@ const ReportsService = {
   },
 
   // Export report to Excel
-  async exportToExcel(reportType: 'inventario' | 'movimientos' | 'bajo-stock', params: any = {}): Promise<Blob> {
+  async exportToExcel(reportType: 'inventario' | 'movimientos' | 'bajo-stock', params: InventoryReportParams | MovementReportParams | LowStockReportParams = {}): Promise<Blob> {
     try {
       const response = await axios.get(`${API_URL}/reportes/export/${reportType}/excel`, {
         params,
